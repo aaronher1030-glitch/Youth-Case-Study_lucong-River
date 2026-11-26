@@ -1,0 +1,1015 @@
+=== PAGE 1 ===
+CASE STUDYCASE STUDYKITKIT  CASE STUDYKIT 
+RESEARCH
+FAIR  2     27
+BALARAW: Wielding Scientific Sagacity in the Hands of Youth
+=== PAGE 2 ===
+BANYUHAY
+Research Fair 2027
+Case Study Competition
+=== PAGE 3 ===
+PROBLEM STATEMENT..................................................................................1
+table of contents
+RUBRICS..........................................................................................................14
+SUBMISSION GUIDELINES..........................................................................23
+COMPETITION PRIZES.................................................................................
+People’s Choice Award Mechanics...............................................................
+SAMPLE TITLE PAGE.....................................................................................
+26
+27
+28
+THE TASK........................................................................................................13
+Declaration Form for Using Artifical Intelligence (AI)...............................
+29
+=== PAGE 4 ===
+problem statement
+1
+I. Context
+Water plays a central role in sustaining human life, supporting
+agriculture and industry, and maintaining healthy aquatic
+ecosystems. However, in urban centers across the Philippines,
+water bodies have turned into dumping channels for land-
+based pollution. Untreated household sewage, uncollected and
+unsegregated garbage, and industrial waste continuously flow
+into municipal storm drains and open canals (esteros). This
+contamination severely degrades freshwater habitats,
+intensifies urban flooding, and carries heavy toxic loads directly
+into coastal bays and oceans. Economically vulnerable urban
+communities, fisherfolk, agricultural workers, and marine
+biodiversity bear the heaviest burden of these deteriorating
+conditions, facing heightened public health risks and degraded
+livelihoods rooted in decades of poor waste management.
+To address these environmental threats, the Philippine
+government passed Republic Act No. 9275 (The Philippine Clean
+Water Act of 2004), establishing a legal framework for water
+quality management, wastewater discharge standards, and
+pollution prevention [1]. Under this law, the Department of
+Public Works and Highways (DPWH) introduced the National
+Sewerage and Septage Management Program (NSSMP) to offer
+technical and financial support to local government units (LGUs)
+and water districts expanding urban sanitation networks [2].
+Furthermore, private water concessionaires have deployed 
+=== PAGE 5 ===
+problem statement
+2
+decentralized modular treatment facilities, such as Maynilad’s
+modular effluent treatment infrastructure, to clean municipal
+wastewater before discharging it into receiving water bodies [3]. 
+Despite these laws and capital investments, physical treatment
+infrastructure and enforcement mechanisms remain severely
+outdated and ineffective relative to the scale of the crisis [4].
+These failures stem not only from financial constraints, but also
+from weak regulatory enforcement by local government units,
+overlapping agency mandates, and a lack of technical expertise
+within local water utilities. Consequently, municipal
+interventions routinely rely on reactive, temporary measures,
+such as environmental river dredging, rather than addressing
+pollution at its origin through upstream containment and
+proactive governance [5].
+Across Philippine cities, water pollution is driven by three
+primary compounding factors:
+1. Uncollected Municipal Solid Waste: The Philippines produces
+approximately 61,000 metric tons of municipal solid waste
+every day [6]. In Metro Manila alone, roughly 40% of municipal
+waste remains uncollected due to inefficient collection
+networks. This unmanaged waste clogs drainage systems,
+worsens seasonal urban flooding, and leaks into rivers. The
+Asian Development Bank (ADB) estimates that 74% of all plastic 
+=== PAGE 6 ===
+problem statement
+3
+waste generated in the country turns into environmental
+pollution, with about 20% of the 2.7 million annual metric tons
+leaking directly into marine ecosystems. Global oceanographic
+research published in Science Advances confirms that
+Philippine rivers are among the world's largest single-country
+sources of ocean plastic emissions, with the Pasig River System
+alone contributing an estimated 6.43% of the global total
+(~63,000 metric tons per year) [7].
+2. Inadequate Municipal Sewerage Infrastructure: Centrally
+connected sewerage networks remain virtually non-existent in
+most cities. Instead, most households rely on poorly built,
+unmaintained, or unemptied septic tanks, allowing untreated
+wastewater (blackwater) to seep directly into groundwater
+aquifers and local streams. United Nations Sustainable
+Development Goal (SDG) tracking indicates that only 68.0% of
+domestic wastewater in the Philippines was safely managed as
+of 2024, leaving nearly one-third of all household effluent
+completely untreated [8].
+3. Unmonitored Commercial and Industrial Run-off: National
+environmental monitoring by the DENR Environmental
+Management Bureau revealed that 54% of inspected
+commercial and industrial facilities (4,930 out of 9,060
+establishments nationwide) violated national effluent discharge
+standards [9]. High volumes of untreated chemical and organic
+=== PAGE 7 ===
+problem statement
+4
+discharges continue to elevate heavy metal and contaminant
+levels across major receiving waterways.
+Nationwide, only about 10% of generated wastewater
+undergoes proper treatment, while the remaining 90% leaks
+untreated into street gutters, groundwater tables, and coastal
+bays [10]. In Metro Manila’s east and west concession zones
+alone, over 820 million cubic meters of wastewater are
+generated each year [11]. Without targeted intervention, these
+escalating pollution loads threaten to trigger acute, widespread
+water security and environmental crises across the country by
+as early as 2040 [12].
+II. Scope Definition
+Proposals will be evaluated on technical viability, budget
+realism, legal alignment, and practical execution. Each team is
+provided an initial seed funding cap of Php 10 Million, which is
+strictly reserved for a 12-month Pilot Proof-of-Concept. To
+ensure spatial feasibility and precise monitoring, the physical
+setup of this pilot project must be limited to a single 1-kilometer
+stretch of a chosen river tributary, creek, or urban canal
+(estero).
+=== PAGE 8 ===
+problem statement
+5
+To maintain focus and prevent teams from overextending their
+resources, proposals must allocate at least 70% of the Php 10
+Million budget toward ONE main focus stream. The remaining
+30% may be used for a supporting secondary activity. Every
+proposal can be (or a combination of) Protocal-based, Service-
+based, or Product-based Approach.
+Teams must select their primary focus from the following three
+options:
+Stream 1: Household Trash Control & Local Waste
+This option focuses on stopping garbage and dirty household
+water before it enters the river. Physical solutions (i.e. river
+trash traps, neighborhood drain filters, or small-scale septic
+tank cleaning systems) may be paired with local government
+ordinances. Policy actions may include municipal garbage-
+sorting laws, local trash dumping fines, and household waste
+management incentives.
+Stream 2: Commercial & Industrial Pollution
+This option focuses on tracking and stopping illegal waste
+dumping from factories, markets, and commercial businesses.
+Physical technologies (i.e. digital water quality monitors,
+automated drain shut-off valves, or localized water filters) may
+be paired with municipal enforcement rules. Policy actions may
+include strict business discharge permits, mandatory public
+=== PAGE 9 ===
+problem statement
+6
+compliance reporting, and shared cleanup agreements among
+local commercial establishments.
+Stream 3: On-Site River Restoration & Environmental Zoning
+This option focuses on cleaning and restoring the natural health
+of the waterbody itself. Natural engineering solutions (i.e.
+artificial floating plant islands, vegetated drainage channels, or
+water-bubbling aeration systems) may be paired with land-use
+policies. Some policy actions may include enforcing illegal
+riverbank building bans (easement rules), protecting waterfront
+green zones, and establishing community-led river stewardship
+programs.
+Important Note: Proposals attempting to solve every environmental
+problem simultaneously or pitch multi-billion-peso infrastructure
+overhauls will be penalized for lack of practical feasibility. The Php
+10 Million budget and 12-month timeline are strictly designated to
+prove that a single, focused solution works within a bounded 1-
+kilometer pilot zone. Teams must demonstrate technical discipline,
+budget realism, and clear policy planning at this local scale before
+explaining how their solution scales up to major national rivers.
+III. Geographic Prioritization
+Participating teams are granted flexibility in selecting their
+localized pilot site, while adhering to a selection of water bodies
+for their project’s national expansion blueprint. 
+=== PAGE 10 ===
+problem statement
+7
+Phase A: Localized Pilot Site
+Teams may select any local polluted water body (i.e., an urban
+estero, coastal creek, municipal drainage canal, or river
+tributary) within their home region or chosen area of study. The
+local pilot implementation must be limited strictly to a 1-km
+segment of this chosen water body to ensure spatial feasibility,
+realistic mapping of point/non-point pollution sources, and
+accurate budget itemization under the allotted seed cap.
+Phase B: Macro-Scale National Expansion Blueprint
+While the proof-of-concept pilot is executed and validated locally,
+proposals must demonstrate national scalability by detailing how
+their solution can be adapted to address one of the top three most
+plastic-polluted rivers in the Philippines. According to landmark
+oceanographic research published in Science Advances, these three
+river systems represent the highest concentrations of riverine
+plastic emissions entering marine ecosystems globally [13]:
+=== PAGE 11 ===
+Rank Target River
+System
+Global & Regional
+Environmental Stressors
+Key Tributaries /
+Estero Segments
+1 Pasig (Metro
+Manila)
+Accounts for 6.43% of
+global riverine ocean
+plastic emissions (~63,000
+tons/year). Densely
+populated urban esteros
+with heavy commercial
+and industrial effluent
+discharge into Manila Bay.
+Estero de Binondo,
+Estero de
+Pandacan, or
+Estero de San
+Miguel
+2
+Tullahan
+(Metro
+Manila /
+Bulacan)
+Accounts for 1.33% of
+global riverine ocean
+plastic emissions into
+marine sinks.
+Characterized by severe
+urban run-off, high
+population density, and
+frequent municipal
+flooding.
+Lower Tullahan
+catchment,
+Tinajeros River
+segment, or
+Dampas drainage
+problem statement
+8
+=== PAGE 12 ===
+problem statement
+9
+3 Meycauayan
+(Bulacan)
+Accounts for 1.23% of
+global riverine ocean
+plastic emissions into
+marine sinks. Heavy
+contamination from
+industrial processing,
+leather tanning
+operations, and untreated
+municipal waste streams.
+Meycauayan Creek,
+Marilao River
+junction, or
+industrial zone run-
+off outlets
+IV. Competition Deliverables
+Here is a guide description for the competition deliverables:
+Deliverable 1: Target Site Profile & Root-Cause Diagnosis
+Teams must select a specific 1-kilometer stretch of a local
+waterbody (such as an urban canal, creek, or river tributary in
+Luzon, Visayas, or Mindanao) and provide a detailed baseline
+analysis. This section must include a site map identifying direct
+pollution sources (such as factory pipes, commercial outlets,
+and municipal drains) alongside indirect pollution sources (such
+as scattered household garbage and rainwater runoff).
+=== PAGE 13 ===
+problem statement
+10
+Deliverable 2: 12-Month Pilot Implementation Plan
+Teams must present a complete operational blueprint for their
+chosen main focus area. This deliverable requires an itemized
+budget showing exactly how the Php 10 Million seed money is
+spent.
+Deliverable 3: National Scaling Blueprint
+To demonstrate long-term national impact, proposals must
+outline a step-by-step roadmap for expanding the validated
+pilot solution to one of the top three most polluted rivers in the
+Philippines (Pasig, Tullahan, or Meycauayan River Systems). 
+Deliverable 4: Quantitative Key Performance Indicators
+Submissions must establish measurable starting figures
+(baselines) and realistic 12-month target goals for their pilot
+project.
+Note: Teams are free to use any software they deem necessary to
+aid in the writing of their case studies.
+=== PAGE 14 ===
+problem statement
+11
+References:
+[1] Supreme Court E-Library. (2004). Republic Act No. 9275: An
+Act Providing for a Comprehensive Water Quality Management
+and for Other Purposes.
+[2] Department of Public Works and Highways. (n.d.). National
+Sewerage and Septage Management Program (NSSMP)
+Guidelines.
+[3] Maynilad. (2024, March 20). Maynilad inaugurates new
+ceramic UF Modular Treatment Plant in Muntinlupa - Maynilad
+Water Services, Inc. Maynilad Water Services, Inc.
+https://www.mayniladwater.com.ph/maynilad-inaugurates-
+new-ceramic-uf-modular-treatment-plant-in-muntinlupa/
+[4] Congressional Policy and Budget Research Department
+(CPBRD). (2026). Weak Budget Utilization Threatens Infra
+Spending.
+[5] Federal Remediation Technologies Roundtable. (n.d.).
+Technology screening matrix | federal remediation
+technologies roundtable. Frtr.Gov. Retrieved from
+https://frtr.gov/matrix/Environmental-Dredging/
+[6] Climate Change Commission. (2024). National Solid Waste
+Status and Emission Reports.
+=== PAGE 15 ===
+problem statement
+12
+[7] Mendoza, D. T. P. (2026, September 23). Is the Philippines
+really the world’s no. 1 source of ocean plastic pollution?
+INQUIRER.net. Inquirerdotnet.
+https://newsinfo.inquirer.net/2310073/is-the-philippines-really-
+the-worlds-no-1-source-of-ocean-plastic-pollution
+[8] United Nations Statistics Division. (2024). SDG Country
+Profile: Philippines (Goal 6 - Clean Water and Sanitation).
+[9] DENR Environmental Management Bureau. (2019/2024).
+Water Environmental Management Country Status Report.
+[10] Corpuz, J. C. G. (2025). Wastewater Management in the
+Philippines: A Call for Localized Solutions and Policy Integration.
+Environmental Health Insights, 19, 11786302241311528.
+[11] Philippine Statistics Authority (PSA). (2023). Philippine
+Environmental Statistics: Water Asset Accounts.
+[12] Philippine Daily Inquirer. (2025). Fixing Critical PH Water
+System Infrastructure.
+[13] Meijer, L. J. J., van Emmerik, T., van der Ent, R., Schmidt, C.,
+& Lebreton, L. (2021). More than 1000 rivers account for 80% of
+global riverine plastic emissions into the ocean. Science
+Advances, 7(18). https://doi.org/10.1126/sciadv.aaz5803
+=== PAGE 16 ===
+the task
+In this preliminary phase of the Case Study Competition, each
+team will be asked to submit their own concept project
+proposals for an approach to address key causes of water
+pollution in the Philippines. Participants may utilize any (or a
+combination) of the following approaches below: 
+1. Protocol-based Approach: This approach focuses on the
+application of established guidelines and procedures to develop
+strategic measures that enhance the efficiency, resilience, and
+management of the LGU’s waterway systems. It primarily
+employs a qualitative framework to ensure systematic
+evaluation and continuous improvement.
+2. Service-based Approach: This approach centers on
+empowering communities and stakeholders to actively
+participate in strengthening and modernizing waterway
+management systems. It emphasizes capacity-building,
+collaboration, and service delivery to improve accessibility,
+sustainability, and overall productivity.
+  
+3. Product-based Approach: This approach involves the design,
+development, and innovation of tangible technologies or
+equipment to optimize the performance and sustainability of
+waterway infrastructure. It highlights technological
+advancement as a means to enhance reliability, efficiency, and
+long-term viability in the waste control sector.
+13
+=== PAGE 17 ===
+Component Description 10 (Exemplary) 1 (Poor)
+Introduction (20%)
+Background
+(10%)
+A brief introspectio
+on the chosen
+strategy.
+Background clearly
+provides context to the
+issues surrounding the
+chosen pilot site and
+defines the strategy’s
+relevance to it.
+Background is generic
+and fails to provide a
+vision behind the chosen
+pilot site and/or
+developed strategy.
+Rationale
+(10%)
+Details why the
+participating team
+chose the strategy.
+Rationale convincingly 
+explains the focus area
+addressed and the
+overall feasibility of their
+proposal through the use
+of well-founded
+references.
+There is little to no
+rationale behind the
+choice of strategy.
+Way of Production (15%)
+Methodology
+(15%)
+Outlines the
+method or plan of
+action in order to
+accomplish
+production of the 
+strategy.
+The methodology is clear,
+concise, well-founded in
+theory, and meets all
+necessary deliverables.
+The paper does not
+expound on the given
+plan and fails to become
+a blueprint that can be
+scaled nationally.
+rubrics
+Concept Project Paper
+The grading for CSC Phase I can be broken down as follows,
+with a grade of 10 being exemplary, and a grade of 1 being
+poor:
+14
+=== PAGE 18 ===
+Component Description 10 (Exemplary) 1 (Poor)
+Creativity (15%)
+Ingenuity
+(10%)
+Shows creativity
+and uniqueness in 
+tackling the
+strategy in the
+context of the
+Philippines.
+The proposal
+incorporates resources
+and/or strategies that
+have not been utilized in
+the country.
+The overall proposal is
+generic and widely used
+as a strategy to address
+the given issue in the
+country.
+Way of Production (15%)
+Practicality
+(10%)
+Discusses the
+possibility of
+implementing the 
+design.
+The proposal is readily
+feasible and can be
+replicated with relative
+ease; all within the
+confines of the provided
+scope.
+The proposal cannot be
+applied in practice.
+Economics
+(5%)
+Briefs the reader 
+on the financial
+side of the
+proposal.
+Given proposal shows a
+detailed economic
+analysis and is confined 
+within the allotted
+budget.
+There is little to no cost
+or economic analysis
+and the proposal goes
+over the budget by a
+substantial amount.
+rubrics
+Concept Project Paper
+15
+=== PAGE 19 ===
+Component Description 10 (Exemplary) 1 (Poor)
+Implications (20%)
+Environment
+(10%)
+Explains the
+effects of
+producing the
+strategy on the
+environment.
+The proposal explains
+any adverse effects on 
+the environment and
+states how these can be
+overcome.
+There is little to no
+explanation on the
+implications of the
+proposal on the 
+environment.
+Health (5%)
+Explains the
+effects  of
+producing the
+strategy on human
+health in the
+surrounding
+community.
+The proposal explains
+any adverse effects on 
+the health and safety of
+the workers and
+surrounding community
+and states how these can
+be overcome.
+There is little to no
+explanation on the
+implications of the
+proposal on human 
+health and safety.
+Community
+Involvement
+(5%)
+Explains the
+community’s roles
+and
+responsibilities in
+ensuring the
+sustainability and
+success of
+waterway
+development.
+The proposal clearly
+shows how the
+community contributes in
+maintaining and/or
+improving the given
+proposal.
+There is little to no
+explanation of the
+community’s
+participation in
+sustaining and
+strengthening the
+current proposal.
+rubrics
+Concept Project Paper
+16
+=== PAGE 20 ===
+Component Description 10 (Exemplary) 1 (Poor)
+Writing (10%)
+Organization
+(5%)
+The overall
+structure and flow
+of the paper.
+The paper is organized in
+a logical manner with 
+one idea flowing well into
+the next.
+The ideas in the proposal
+are scattered and have
+no coherence with
+respect to one another.
+Grammar and
+Word Choice
+(5%)
+Shows appropriate
+use of the English 
+language in
+writing  the
+proposal.
+The paper is well-written,
+with no grammatical
+errors and good word
+choice.
+Errors in grammar are
+abundant and word
+choice proves to be
+lackluster.
+References (5%)
+Quality of 
+Sources (5%)
+The references
+used and their
+reliability.
+The sources used come
+only from credible
+websites, peer-reviewed
+journals, books, and
+other research with
+credibility.
+The sources used are
+poor and have little to no
+credibility.
+rubrics
+Concept Project Paper
+17
+=== PAGE 21 ===
+Component Subcomponent Percentage
+Creativity and Visual
+Appeal
+Graphics
+Appropriateness
+Color Scheme
+Font Style
+30
+Content
+Conciseness and Understandability
+Readability/Font Size
+Accuracy and Comprehensivity
+45
+Cohesiveness Organization
+Clarity
+25
+rubrics
+Digital Poster
+While the People’s Choice Award is dependent on the online
+traction received by the case study poster. The Best in Digital
+Poster award would be utilizing the rubrics below:
+18
+=== PAGE 22 ===
+Component Description 10 (Exemplary) 1 (Poor)
+Introduction (12.5%)
+Background
+(5%)
+A brief
+introspection on
+the chosen
+strategy.
+Background clearly
+provides context to the
+issues surrounding the
+chosen pilot site and
+defines the strategy’s
+relevance to it.
+Background is generic
+and fails to provide a
+vision behind the chosen
+pilot site and/or
+developed strategy.
+Rationale
+(7.5%)
+Details why the
+participating team 
+chose the strategy.
+Rationale convincingly 
+explains the focus area
+addressed and the
+overall feasibility of their
+proposal through the use
+of well-founded
+references.
+There is little to no
+rationale behind the
+choice of strategy.
+Creativity (7.5%)
+Ingenuity
+(7.5%)
+Shows creativity
+and uniqueness in 
+tackling the
+strategy in the
+context of the
+Philippines.
+The proposal
+incorporates resources
+and/or strategies that
+have not been utilized in
+country.
+The overall proposal is
+generic and widely used
+as a strategy to address
+the given issue in the
+country.
+rubrics
+Oral Presentation
+The grading for CSC Phase II can be broken down as follows,
+with a grade of 10 being exemplary, and a grade of 1 being
+poor:
+19
+=== PAGE 23 ===
+Component Description 10 (Exemplary) 1 (Poor)
+Plan of Action (15%)
+Methodology
+(15%)
+Outlines the
+method or plan of
+action in order to
+accomplish
+production of the
+strategy.
+The methodology is clear,
+concise, well-founded in
+theory, and meets all
+necessary deliverables.
+The paper does not
+expound on the given
+plan and fails to become
+a blueprint that can be
+scaled nationally.
+Feasibility (15%)
+Practicality
+(10%)
+Discusses the
+possibility of
+implementing the
+design.
+The proposal is readily
+feasible and can be
+replicated with relative
+ease; all within the
+confines of the provided
+scope.
+The presentation cannot
+show how their proposal
+can be applied in
+practice.
+Economic
+Analysis (5%)
+Briefs the audience
+on the financial
+side of the
+proposal.
+The participants
+presented a well-
+organized and detailed
+economic analysis which
+demonstrates that the
+project was feasible
+within the allotted
+budget.
+There is little to no
+mention of cost or
+economic analysis and
+the proposal goes over
+the budget by a
+substantial amount.
+rubrics
+Oral Presentation
+20
+=== PAGE 24 ===
+Component Description 10 (Exemplary) 1 (Poor)
+Implications (25%)
+Environment
+(10%) 
+Explains the
+effects of
+producing the
+strategy on the
+environment.
+The participants were
+able to effectively identify
+and explain any adverse
+effects on the
+environment and even
+stated how these can be
+overcome.
+No explanation on the
+implications of the
+proposal on the
+environment was
+presented.
+Health (5%)
+Explains the
+effects of
+producing the
+strategy on the
+health of the
+affected
+population.
+The participants were
+able to effectively explain
+any adverse effects on
+the health and safety of
+the workers and
+community and even
+stated how these can be
+overcome.
+No explanation on the
+implications of the
+proposal on human
+health and safety was
+presented.
+Community
+Involvement
+(10%) 
+Explains the social
+responsibilities the
+community must
+uphold.
+The participants were
+able to effectively discuss
+how the community can
+contribute.
+No explanation on the
+role of the community
+was presented.
+rubrics
+Oral Presentation
+21
+=== PAGE 25 ===
+Component Description 10 (Exemplary) 1 (Poor)
+Presentation (20%)
+Delivery (15%)
+The way that the
+team
+communicates the
+relevant
+information to the
+audience.
+The team is able to
+present and explain their
+ideas in a fluid, concise,
+and eloquent manner.
+The ideas of the team
+were not presented well
+thus hampering the
+understanding of the
+audience towards their
+proposal.
+Visual Aids
+(5%)
+The overall
+aesthetic and
+impact of the
+presentation.
+The presentation and
+slides used are visually
+appealing and tables and
+figures are used to
+illustrate key points if
+applicable.
+The presentation is not
+visually appealing at all.
+References (5%)
+Quality of 
+Sources (5%)
+The references
+used and their
+reliability.
+The sources used come
+only from credible
+websites, peer-reviewed
+journals, books, and
+other research with
+credibility.
+The sources used are
+poor and have little to no
+credibility.
+rubrics
+Oral Presentation
+22
+=== PAGE 26 ===
+submission guidelines
+Each team’s case study proposal shall include the following: 
+ 
+1. Title Page  
+Title
+School Name and Team Name
+Name of Participants
+Date Submitted 
+2. Introduction to the Proposed Approach for Reducing
+Waterbody Pollution in the Philippines
+Target site profile & root-cause diagnosis
+3. Suggested process/product to make use of in the approach
+to address the Introduction to the Proposed Approach for
+Reducing Waterbody Pollution in the Philippines
+Plan of Action
+Raw Materials to be used (if any)
+Steps for Production/Theoretical Implementation 
+Efficiency of the process/product
+ 
+4. Discussion of the expected end output and its function(s)
+See deliverable 4 in page 10-11
+ 
+23
+=== PAGE 27 ===
+submission guidelines
+5. Feasibility and Economic Analysis 
+Overall Plan (i.e. production requirements, facilities, and
+marketing strategy, if any)
+Estimated Costs
+Technical Feasibility (Does the country have the existing
+technology?)
+National scaling blueprint
+ 
+6. Implications (i.e. Health and Environment, Community
+Involvement)
+ 
+7. References (APA Format) 
+ 
+8. Declaration Form for Using Artificial Intelligence (AI)
+Each paper is limited to 2,200 words (excluding References).
+Participants are asked to exert their utmost creativity,
+imagination, and critical thinking skills in this competition. The
+font to be used is Times New Roman, size 12, and the paper
+size should be Letter (8.5” x 11”) with 1-inch margins on all
+sides. Line spacing must be 1.5.
+Moreover, participants are expected to submit a digital poster
+of their case studies. The team's digital poster entry contains
+the title and the summarized and simplified content of the
+study. Dimensions must be in 3:4 aspect ratio and in portrait
+layout.
+24
+=== PAGE 28 ===
+submission guidelines
+The deadline for Case Study Competition Phase I submissions
+will be on December 5, 2026 (Saturday), 11:59 PM PHT. Note
+that the participants must be registered for the Youth Science
+Convention to join the case study competition. 
+Forward all of your submissions through the official YSC email
+address, rf.ysc@upalchemes.org, following the given file name
+format:
+Case Study Paper (in PDF format):
+YSC Phase I_[Name of School]_[Team Number].pdf
+ex: YSC Phase I_University of the Philippines Diliman_1.pdf
+Digital Poster (in JPG or PNG format):
+YSC Poster_[Name of School]_[Team Number].png (or .jpg)
+ex: YSC Poster_University of the Philippines DIliman_1.png
+25
+=== PAGE 29 ===
+AI Tools Purpose
+Prompts Used + Descriptions of
+how the output was used after
+modifications
+ChatGPT Grammar and sentence
+refinement
+Used for rephrasing overly long
+or complex sentences. Output
+was manually verified and
+adjusted to avoid loss of meaning.
+submission guidelines
+Declaration Form for Using Artificial Intelligence (AI)
+We hereby declare that in the writing process of this work, no
+generative artificial intelligence (AI) or AI-assisted technologies
+were used to generate content, ideas, or theories. We utilized AI
+solely for the purpose of enhancing readability and refining
+language. After the application of AI technologies, the authors
+carefully reviewed and edited the manuscript to ensure its
+accuracy and coherence. The authors understand the potential
+of AI to generate content that may sound authoritative yet
+might be incorrect, incomplete, or biased. Considering this, the
+authors ensured that the manuscript was thoroughly revised by
+human eyes and judgment. 
+[This is a sample table only. You must create your own in your Declaration]
+26
+Signature over Printed Name & Date
+Signature over Printed Name & Date
+Signature over Printed Name & Date
+=== PAGE 30 ===
+Title Team Prizes Individual Prizes
+CSC Champion Php 10,000
+Medals + CertificatesCSC 1st Runner Up Php 7,500
+CSC 2nd Runner Up Php 4,500
+Title Description Team
+Prizes Individual Prizes
+Best in
+Digital Poster
+Highest average
+Digital Poster Score Php 1,000
+Certificates
+People’s
+Choice
+Award
+Digital Poster with
+the highest
+cumulative votes
+through Google
+Forms and FB likes
+Php 1,000
+Best in
+Presentation
+Highest presentation
+score during CSC
+Phase II
+Php 1,000
+competition prizes
+Major Awards
+Special Awards
+*Cash Prizes are subject to change
+27
+=== PAGE 31 ===
+competition prizes
+People’s Choice Award Mechanics
+The People’s Choice Award will be conducted through two
+official platforms: online voting (RF Facebook Page) and Google
+Forms submission. This dual system is designed to make voting
+accessible to a wider audience while preventing duplicate or
+unfair entries.
+1. Online Voting Platform – The posters for the Research
+Competition and the Youth Science Convention – Case Study
+Competition will be uploaded on the official Research Fair
+Facebook page. Supporters may cast their votes by liking the
+poster of their choice. Each Facebook account will be counted
+as one valid vote.
+2. Google Forms Voting – A secure Google Form will also be
+provided for participants, peers, and guests who wish to vote.
+The form will be set to accept only one response per email
+address, ensuring that each voter is given a single, fair chance
+to cast their vote.
+3. Announcement of Results - The digital poster that obtains the
+highest cumulative score based on Google Form responses
+(80%) and Facebook likes (20%) will be declared the winner of
+the People’s Choice Award. The award will be formally
+presented during the Closing Program of Research Fair 2027.
+28
+=== PAGE 32 ===
+sample title page
+29
+Proposed Approach for Addressing the Enhancement of
+Waterway Management Systems in Urban Areas of the
+Philippines
+University of the Philippines Diliman
+Team A
+Dela Cruz, Juan
+Dela Cruz, Juan
+Dela Cruz, Juan
+Date Submitted: 5 December 2026

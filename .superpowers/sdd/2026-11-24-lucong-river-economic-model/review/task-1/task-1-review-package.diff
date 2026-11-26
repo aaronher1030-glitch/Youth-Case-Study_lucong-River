@@ -1,0 +1,727 @@
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/requirements-dev.txt .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/requirements-dev.txt
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/requirements-dev.txt	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/requirements-dev.txt	2026-11-25 07:19:38.640819500 +0800
+@@ -0,0 +1,5 @@
++-r sim/requirements.txt
++pytest==9.0.3
++streamlit==1.67.0
++plotly==7.1.0
++openpyxl==3.1.5
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/river_model/__init__.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/__init__.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/river_model/__init__.py	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/__init__.py	2026-11-25 07:19:37.985828300 +0800
+@@ -0,0 +1 @@
++"""Headless economic model for the Lucong River study."""
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/river_model/inputs.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/inputs.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/river_model/inputs.py	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/inputs.py	2026-11-25 07:19:37.999826600 +0800
+@@ -0,0 +1,459 @@
++from __future__ import annotations
++
++import csv
++from dataclasses import dataclass, fields, replace
++from pathlib import Path
++from typing import Literal, Mapping, Sequence, get_args, get_type_hints
++
++Status = Literal["measured", "sourced", "derived", "assumption", "missing", "design"]
++
++
++@dataclass(frozen=True)
++class Shed:
++    shed_id: str
++    barangay: str
++    heads: int
++    drains_to_reach: bool | None
++    source: str
++
++
++@dataclass(frozen=True)
++class Params:
++    c0_mpn_100ml: float = 16_000.0
++    q_m3_s: float = 0.05
++    e_head_day: float = 1.0e9
++    eta: float = 1.0
++    p_enroll: float = 0.95
++    p_collect: float = 0.95
++    p_retain: float = 0.95
++    upstream_mpn_100ml: float | None = None
++    source_share_tolerance: float = 0.10
++
++    manure_kg_head_day: float = 2.0
++    washwater_l_head_day: float = 22.0
++    dm_frac: float = 0.20
++    vs_frac_dm: float = 0.80
++    vs_destroyed: float = 0.50
++    ch4_yield: float = 0.35
++    ch4_frac: float = 0.60
++    lpg_mj_kg: float = 46.0
++    ch4_mj_m3: float = 35.8
++    n_frac_dm: float = 0.04
++    rice_n_kg_ha: float = 120.0
++    land_available_ha: float | None = None
++
++    cap_digester: float = 380_000.0
++    cap_tanker: float = 1_450_000.0
++    cap_cart: float = 180_000.0
++    cap_pad: float = 980_000.0
++    cap_gas_kit: float = 45_000.0
++    cap_site: float = 420_000.0
++    cap_meters: float = 180_000.0
++    cap_training: float = 320_000.0
++    cap_manifest: float = 155_000.0
++    cap_shed_fund: float = 700_000.0
++    cap_replication: float = 600_000.0
++    opex_staff_year: float = 1_140_000.0
++    opex_sampling_year: float = 480_000.0
++    opex_maint_frac: float = 0.05
++    opex_trip: float = 700.0
++    opex_admin_year: float = 60_000.0
++    contingency_rate: float = 0.10
++
++    workdays_week: int = 6
++    trips_day_cap: int = 5
++    tanker_m3: float = 2.0
++    module_m3: float = 25.0
++    hrt_min_days: float = 10.0
++    utilization: float = 0.80
++
++    budget: float = 10_000_000.0
++    discount: float = 0.08
++    asset_life: int = 10
++    replacement_year: int = 5
++    replacement_capex_frac: float = 0.25
++
++    pilot_months: int = 12
++    target_mpn_100ml: float = 8_000.0
++    target_probability: float = 0.80
++    focus_stream_share: float = 1.0
++    max_extra_modules: int = 2
++    max_extra_tankers: int = 2
++
++
++PARAMETER_META: dict[str, dict[str, str]] = {
++    "c0_mpn_100ml": {
++        "unit": "MPN/100 mL",
++        "status": "sourced",
++        "source": "MODEL_SPEC_LUCONG.md baseline; retain the cited source for research use.",
++    },
++    "q_m3_s": {
++        "unit": "m3/s",
++        "status": "assumption",
++        "source": "Field measurement or literature verification is required.",
++    },
++    "e_head_day": {
++        "unit": "MPN/head/day",
++        "status": "assumption",
++        "source": "Field measurement or literature verification is required.",
++    },
++    "eta": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "Field measurement or literature verification is required.",
++    },
++    "p_enroll": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "Planning assumption; verify with enrollment records.",
++    },
++    "p_collect": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "Planning assumption; verify with collection monitoring.",
++    },
++    "p_retain": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "Planning assumption; verify with service-use monitoring.",
++    },
++    "upstream_mpn_100ml": {
++        "unit": "MPN/100 mL",
++        "status": "missing",
++        "source": "No upstream river water-quality measurement supplied.",
++    },
++    "source_share_tolerance": {
++        "unit": "fraction",
++        "status": "design",
++        "source": "Research design choice for acceptable source-share error.",
++    },
++    "manure_kg_head_day": {
++        "unit": "kg/head/day",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with field measurement or literature.",
++    },
++    "washwater_l_head_day": {
++        "unit": "L/head/day",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with field measurement or literature.",
++    },
++    "dm_frac": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with field measurement or literature.",
++    },
++    "vs_frac_dm": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with field measurement or literature.",
++    },
++    "vs_destroyed": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with digester operating data or literature.",
++    },
++    "ch4_yield": {
++        "unit": "m3 CH4/kg VS",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with substrate-specific literature.",
++    },
++    "ch4_frac": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with biogas composition data.",
++    },
++    "lpg_mj_kg": {
++        "unit": "MJ/kg",
++        "status": "sourced",
++        "source": "MODEL_SPEC_LUCONG.md LPG energy-content baseline.",
++    },
++    "ch4_mj_m3": {
++        "unit": "MJ/m3",
++        "status": "sourced",
++        "source": "MODEL_SPEC_LUCONG.md methane energy-content baseline.",
++    },
++    "n_frac_dm": {
++        "unit": "kg N/kg DM",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with manure analysis or literature.",
++    },
++    "rice_n_kg_ha": {
++        "unit": "kg N/ha",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md baseline; verify with agronomic recommendations.",
++    },
++    "land_available_ha": {
++        "unit": "ha",
++        "status": "missing",
++        "source": "No verified land availability supplied.",
++    },
++    "cap_digester": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_tanker": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_cart": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_pad": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_gas_kit": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_site": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_meters": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_training": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_manifest": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_shed_fund": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "cap_replication": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md planning capital cap; validate with local quotations.",
++    },
++    "opex_staff_year": {
++        "unit": "PHP/year",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md planning estimate; verify with local staffing costs.",
++    },
++    "opex_sampling_year": {
++        "unit": "PHP/year",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md planning estimate; verify with laboratory quotations.",
++    },
++    "opex_maint_frac": {
++        "unit": "fraction/year",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md planning estimate; verify with maintenance records.",
++    },
++    "opex_trip": {
++        "unit": "PHP/trip",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md planning estimate; verify with local hauling rates.",
++    },
++    "opex_admin_year": {
++        "unit": "PHP/year",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md planning estimate; verify with administrative costs.",
++    },
++    "contingency_rate": {
++        "unit": "fraction",
++        "status": "design",
++        "source": "Research design choice for capital-cost contingency.",
++    },
++    "workdays_week": {
++        "unit": "days/week",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md operating assumption; verify with service schedule.",
++    },
++    "trips_day_cap": {
++        "unit": "trips/day",
++        "status": "design",
++        "source": "Research design choice for daily collection capacity.",
++    },
++    "tanker_m3": {
++        "unit": "m3",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md vehicle sizing assumption; verify supplier specifications.",
++    },
++    "module_m3": {
++        "unit": "m3",
++        "status": "design",
++        "source": "MODEL_SPEC_LUCONG.md modular sizing assumption; verify supplier specifications.",
++    },
++    "hrt_min_days": {
++        "unit": "days",
++        "status": "assumption",
++        "source": "MODEL_SPEC_LUCONG.md operating assumption; verify design literature and climate.",
++    },
++    "utilization": {
++        "unit": "fraction",
++        "status": "design",
++        "source": "Research design choice for effective capacity utilization.",
++    },
++    "budget": {
++        "unit": "PHP",
++        "status": "design",
++        "source": "Research design budget constraint from MODEL_SPEC_LUCONG.md.",
++    },
++    "discount": {
++        "unit": "fraction/year",
++        "status": "assumption",
++        "source": "Financial-analysis assumption; verify against the study's chosen rate.",
++    },
++    "asset_life": {
++        "unit": "years",
++        "status": "design",
++        "source": "Research design duration for economic appraisal.",
++    },
++    "replacement_year": {
++        "unit": "year",
++        "status": "design",
++        "source": "Research design duration for scheduled replacement.",
++    },
++    "replacement_capex_frac": {
++        "unit": "fraction",
++        "status": "assumption",
++        "source": "Financial-analysis assumption; verify with equipment replacement quotations.",
++    },
++    "pilot_months": {
++        "unit": "months",
++        "status": "design",
++        "source": "Research design duration for the pilot.",
++    },
++    "target_mpn_100ml": {
++        "unit": "MPN/100 mL",
++        "status": "design",
++        "source": "Research design target for treated effluent quality.",
++    },
++    "target_probability": {
++        "unit": "fraction",
++        "status": "design",
++        "source": "Research design target for scenario success probability.",
++    },
++    "focus_stream_share": {
++        "unit": "fraction",
++        "status": "design",
++        "source": "Research design choice for the focus stream share.",
++    },
++    "max_extra_modules": {
++        "unit": "modules",
++        "status": "design",
++        "source": "Research design limit on additional digester modules.",
++    },
++    "max_extra_tankers": {
++        "unit": "tankers",
++        "status": "design",
++        "source": "Research design limit on additional tankers.",
++    },
++}
++
++
++_CENSUS_COLUMNS = {"shed_id", "barangay", "heads", "drains_to_reach", "source"}
++
++
++def load_census(path: Path) -> tuple[Shed, ...]:
++    sheds: list[Shed] = []
++    seen_ids: set[str] = set()
++    with path.open(newline="", encoding="utf-8-sig") as handle:
++        reader = csv.DictReader(handle)
++        if reader.fieldnames is None or not _CENSUS_COLUMNS.issubset(reader.fieldnames):
++            raise ValueError("census CSV is missing required columns")
++        for row in reader:
++            raw_shed_id = row["shed_id"]
++            shed_id = raw_shed_id.strip() if raw_shed_id is not None else ""
++            if not shed_id:
++                raise ValueError("shed_id must not be blank")
++            if shed_id in seen_ids:
++                raise ValueError(f"duplicate shed_id: {shed_id}")
++            seen_ids.add(shed_id)
++
++            try:
++                heads = int(row["heads"])
++            except (TypeError, ValueError) as exc:
++                raise ValueError(f"heads must be an integer for shed_id {shed_id}") from exc
++            if heads < 1:
++                raise ValueError(f"heads must be positive for shed_id {shed_id}")
++
++            drainage = (row["drains_to_reach"] or "").strip().lower()
++            if drainage not in {"true", "false", "unknown"}:
++                raise ValueError(
++                    f"drains_to_reach must be true, false, or unknown for shed_id {shed_id}"
++                )
++            drains_to_reach = {"true": True, "false": False, "unknown": None}[drainage]
++            sheds.append(
++                Shed(
++                    shed_id=shed_id,
++                    barangay=row["barangay"],
++                    heads=heads,
++                    drains_to_reach=drains_to_reach,
++                    source=row["source"],
++                )
++            )
++    return tuple(sheds)
++
++
++def eligible_sheds(sheds: Sequence[Shed]) -> tuple[Shed, ...]:
++    return tuple(shed for shed in sheds if shed.drains_to_reach is True)
++
++
++def apply_overrides(params: Params, overrides: Mapping[str, str]) -> Params:
++    params_by_name = {field.name: field for field in fields(Params)}
++    parameter_types = get_type_hints(Params)
++    changed: dict[str, float | int | None] = {}
++    for name, raw_value in overrides.items():
++        if name not in params_by_name:
++            raise ValueError(f"unknown parameter: {name}")
++        current = getattr(params, name)
++        text = raw_value.strip()
++        if text.lower() == "none":
++            if type(None) not in get_args(parameter_types[name]):
++                raise ValueError(f"parameter {name} cannot be None")
++            changed[name] = None
++        elif isinstance(current, int) and not isinstance(current, bool):
++            try:
++                changed[name] = int(text)
++            except ValueError as exc:
++                raise ValueError(f"parameter {name} must be an integer") from exc
++        else:
++            try:
++                changed[name] = float(text)
++            except ValueError as exc:
++                raise ValueError(f"parameter {name} must be a number or None") from exc
++    return replace(params, **changed)
++
++
++def parameter_register(params: Params) -> list[dict[str, object]]:
++    parameter_names = {field.name for field in fields(Params)}
++    metadata_names = set(PARAMETER_META)
++    if parameter_names != metadata_names:
++        missing = sorted(parameter_names - metadata_names)
++        extra = sorted(metadata_names - parameter_names)
++        raise ValueError(f"parameter metadata mismatch: missing={missing}, extra={extra}")
++
++    rows: list[dict[str, object]] = []
++    for field in fields(Params):
++        metadata = PARAMETER_META[field.name]
++        if set(metadata) != {"unit", "status", "source"}:
++            raise ValueError(f"parameter metadata mismatch for {field.name}")
++        rows.append(
++            {
++                "name": field.name,
++                "value": getattr(params, field.name),
++                "unit": metadata["unit"],
++                "status": metadata["status"],
++                "source": metadata["source"],
++            }
++        )
++    return rows
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/river_model/synthetic.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/synthetic.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/river_model/synthetic.py	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/synthetic.py	2026-11-25 07:19:38.068400700 +0800
+@@ -0,0 +1,99 @@
++from __future__ import annotations
++
++import csv
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Sequence
++
++import numpy as np
++
++from river_model.inputs import Shed
++
++
++@dataclass(frozen=True)
++class SyntheticSpec:
++    sheds_low: int = 12
++    sheds_high: int = 20
++    heads_low: float = 8.0
++    heads_mode: float = 15.0
++    heads_high: float = 25.0
++    connection_levels: tuple[float, ...] = (0.0, 0.25, 0.50, 0.75, 1.00)
++    barangays: tuple[str, ...] = ("Santiago", "Alfonso")
++    default_scenarios: int = 200
++
++
++def _validate(spec: SyntheticSpec) -> None:
++    if spec.sheds_low < 1 or spec.sheds_high < spec.sheds_low:
++        raise ValueError("shed bounds must be positive and ordered")
++    if not (0 < spec.heads_low <= spec.heads_mode <= spec.heads_high):
++        raise ValueError("heads_low, heads_mode, and heads_high must be positive and ordered")
++    if not spec.connection_levels or any(
++        value < 0.0 or value > 1.0 for value in spec.connection_levels
++    ):
++        raise ValueError("connection_levels must lie between 0 and 1")
++    if len(spec.barangays) < 2 or len(set(spec.barangays)) != len(spec.barangays):
++        raise ValueError("barangays must contain at least two unique names")
++    if spec.default_scenarios < 1:
++        raise ValueError("default_scenarios must be positive")
++
++
++def generate_synthetic_census(
++    spec: SyntheticSpec,
++    scenario_id: int,
++    seed: int,
++) -> tuple[Shed, ...]:
++    _validate(spec)
++    if scenario_id < 1:
++        raise ValueError("scenario_id must be positive")
++
++    rng = np.random.default_rng(seed)
++    n_sheds = int(rng.integers(spec.sheds_low, spec.sheds_high + 1))
++    connection_probability = float(rng.choice(spec.connection_levels))
++    sheds: list[Shed] = []
++
++    for index in range(1, n_sheds + 1):
++        heads = max(
++            1,
++            int(round(rng.triangular(spec.heads_low, spec.heads_mode, spec.heads_high))),
++        )
++        connected = bool(rng.random() < connection_probability)
++        barangay = str(rng.choice(spec.barangays))
++        source = (
++            f"synthetic; scenario={scenario_id}; seed={seed}; "
++            f"prior=sheds {spec.sheds_low}-{spec.sheds_high}, "
++            f"heads triangular({spec.heads_low:g},{spec.heads_mode:g},{spec.heads_high:g}), "
++            f"connection={connection_probability:.2f}"
++        )
++        sheds.append(
++            Shed(
++                shed_id=f"SYN-{scenario_id:04d}-{index:02d}",
++                barangay=barangay,
++                heads=heads,
++                drains_to_reach=connected,
++                source=source,
++            )
++        )
++
++    return tuple(sheds)
++
++
++def write_census(path: Path, sheds: Sequence[Shed]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with path.open("w", newline="", encoding="utf-8") as handle:
++        writer = csv.DictWriter(
++            handle,
++            fieldnames=["shed_id", "barangay", "heads", "drains_to_reach", "source"],
++        )
++        writer.writeheader()
++        for shed in sheds:
++            writer.writerow(
++                {
++                    "shed_id": shed.shed_id,
++                    "barangay": shed.barangay,
++                    "heads": shed.heads,
++                    "drains_to_reach": (
++                        "unknown" if shed.drains_to_reach is None else str(shed.drains_to_reach).lower()
++                    ),
++                    "source": shed.source,
++                }
++            )
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/tests/fixtures/census.csv .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/fixtures/census.csv
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/tests/fixtures/census.csv	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/fixtures/census.csv	2026-11-25 07:19:38.514703800 +0800
+@@ -0,0 +1,4 @@
++shed_id,barangay,heads,drains_to_reach,source
++S01,Santiago,10,true,MENRO census 2026-11-24
++S02,Santiago,12,true,Barangay census 2026-11-24
++S03,Alfonso,8,unknown,Team estimate 2026-11-24
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/tests/test_inputs.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/test_inputs.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/tests/test_inputs.py	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/test_inputs.py	2026-11-25 07:19:38.275597300 +0800
+@@ -0,0 +1,75 @@
++from dataclasses import fields, replace
++from pathlib import Path
++
++import pytest
++
++from river_model.inputs import (
++    Params,
++    apply_overrides,
++    eligible_sheds,
++    load_census,
++    parameter_register,
++)
++
++FIXTURE = Path(__file__).parent / "fixtures" / "census.csv"
++
++
++def test_census_loads_and_excludes_unknown_drainage_from_base_case():
++    sheds = load_census(FIXTURE)
++    assert [s.shed_id for s in sheds] == ["S01", "S02", "S03"]
++    assert [s.shed_id for s in eligible_sheds(sheds)] == ["S01", "S02"]
++    assert eligible_sheds(sheds)[0].heads == 10
++
++
++def test_census_rejects_duplicate_ids(tmp_path: Path):
++    path = tmp_path / "bad.csv"
++    path.write_text(
++        "shed_id,barangay,heads,drains_to_reach,source\n"
++        "S01,Santiago,10,true,test\n"
++        "S01,Santiago,12,true,test\n",
++        encoding="utf-8",
++    )
++    with pytest.raises(ValueError, match="duplicate shed_id"):
++        load_census(path)
++
++
++def test_census_rejects_nonpositive_heads(tmp_path: Path):
++    path = tmp_path / "bad.csv"
++    path.write_text(
++        "shed_id,barangay,heads,drains_to_reach,source\n"
++        "S01,Santiago,0,true,test\n",
++        encoding="utf-8",
++    )
++    with pytest.raises(ValueError, match="heads must be positive"):
++        load_census(path)
++
++
++def test_override_parses_numbers_and_preserves_base_object():
++    base = Params()
++    changed = apply_overrides(base, {"q_m3_s": "0.08", "land_available_ha": "12.5"})
++    assert changed.q_m3_s == 0.08
++    assert changed.land_available_ha == 12.5
++    assert base.q_m3_s == 0.05
++    assert base.land_available_ha is None
++
++
++def test_override_can_clear_a_populated_optional_parameter():
++    base = apply_overrides(Params(), {"upstream_mpn_100ml": "120.0"})
++    changed = apply_overrides(base, {"upstream_mpn_100ml": "None"})
++    assert changed.upstream_mpn_100ml is None
++    assert base.upstream_mpn_100ml == 120.0
++
++
++def test_override_rejects_unknown_parameter():
++    with pytest.raises(ValueError, match="unknown parameter"):
++        apply_overrides(Params(), {"not_a_parameter": "1"})
++
++
++def test_register_covers_every_parameter_and_marks_missing_land():
++    rows = parameter_register(Params())
++    names = {row["name"] for row in rows}
++    expected = {field.name for field in fields(Params)}
++    assert names == expected
++    land = next(row for row in rows if row["name"] == "land_available_ha")
++    assert land["status"] == "missing"
++    assert land["value"] is None
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/tests/test_synthetic.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/test_synthetic.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/base/tests/test_synthetic.py	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/test_synthetic.py	2026-11-25 07:19:38.322562100 +0800
+@@ -0,0 +1,56 @@
++from dataclasses import replace
++from pathlib import Path
++
++import pytest
++
++from river_model.inputs import load_census
++from river_model.synthetic import (
++    SyntheticSpec,
++    generate_synthetic_census,
++    write_census,
++)
++
++
++def test_fixed_seed_is_reproducible():
++    spec = SyntheticSpec()
++    a = generate_synthetic_census(spec, scenario_id=1, seed=2026)
++    b = generate_synthetic_census(spec, scenario_id=1, seed=2026)
++    assert a == b
++    assert a != generate_synthetic_census(spec, scenario_id=1, seed=2027)
++
++
++def test_generated_rows_obey_declared_bounds():
++    spec = SyntheticSpec()
++    sheds = generate_synthetic_census(spec, scenario_id=2, seed=2026)
++    assert 12 <= len(sheds) <= 20
++    assert all(8 <= shed.heads <= 25 for shed in sheds)
++    assert all(shed.barangay in {"Santiago", "Alfonso"} for shed in sheds)
++    assert len({shed.shed_id for shed in sheds}) == len(sheds)
++
++
++def test_every_generated_row_is_labelled_synthetic():
++    sheds = generate_synthetic_census(SyntheticSpec(), scenario_id=3, seed=2026)
++    assert all(shed.source.startswith("synthetic;") for shed in sheds)
++    assert all("scenario=3" in shed.source for shed in sheds)
++
++
++def test_write_and_load_round_trip(tmp_path: Path):
++    sheds = generate_synthetic_census(SyntheticSpec(), scenario_id=4, seed=2026)
++    path = tmp_path / "synthetic.csv"
++    write_census(path, sheds)
++    assert load_census(path) == sheds
++
++
++def test_invalid_prior_is_rejected():
++    with pytest.raises(ValueError, match="heads_low"):
++        generate_synthetic_census(
++            replace(SyntheticSpec(), heads_low=30.0),
++            scenario_id=1,
++            seed=2026,
++        )
++    with pytest.raises(ValueError, match="connection_levels"):
++        generate_synthetic_census(
++            replace(SyntheticSpec(), connection_levels=(0.0, 1.5)),
++            scenario_id=1,
++            seed=2026,
++        )

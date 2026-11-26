@@ -1,0 +1,60 @@
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-5/fix-2-base/river_model/design.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-5/fix-2-head/river_model/design.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-5/fix-2-base/river_model/design.py	2026-11-25 08:59:18.527716600 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-5/fix-2-head/river_model/design.py	2026-11-25 09:15:30.957246200 +0800
+@@ -37,6 +37,12 @@
+ 
+ def enumerate_designs(params: Params, sheds: Sequence[Shed]) -> list[DesignEvaluation]:
+     """Raise immediately for a physically invalid service subset; never cap or drop it."""
++    if isinstance(params.pilot_months, bool) or not isinstance(
++        params.pilot_months, Integral
++    ):
++        raise ValueError("pilot_months must be a finite integer")
++    if params.pilot_months < 1:
++        raise ValueError("pilot_months must be an integer from 1 through 12")
+     if params.pilot_months > 12:
+         raise ValueError("pilot exceeds 12 months")
+ 
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-5/fix-2-base/tests/test_design.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-5/fix-2-head/tests/test_design.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-5/fix-2-base/tests/test_design.py	2026-11-25 08:59:18.685331700 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-5/fix-2-head/tests/test_design.py	2026-11-25 09:15:31.052283800 +0800
+@@ -241,6 +241,40 @@
+     assert constraint_feasible(replace(row, checks=checks, rejection_reasons=()))
+ 
+ 
++@pytest.mark.parametrize(
++    ("value", "message"),
++    (
++        (0, "pilot_months must be an integer from 1 through 12"),
++        (-1, "pilot_months must be an integer from 1 through 12"),
++        (1.5, "pilot_months must be a finite integer"),
++        (math.nan, "pilot_months must be a finite integer"),
++        (math.inf, "pilot_months must be a finite integer"),
++        (True, "pilot_months must be a finite integer"),
++        (False, "pilot_months must be a finite integer"),
++        ("12", "pilot_months must be a finite integer"),
++        (None, "pilot_months must be a finite integer"),
++    ),
++)
++def test_invalid_pilot_months_fail_before_costing(monkeypatch, value, message):
++    def unexpected_costing(*args, **kwargs):
++        pytest.fail("compute_costs must not run for an invalid pilot duration")
++
++    monkeypatch.setattr(design_module, "compute_costs", unexpected_costing)
++    params = replace(Params(), pilot_months=value)
++    with pytest.raises(ValueError, match=f"^{message}$"):
++        enumerate_designs(params, load_census(FIXTURE))
++
++
++@pytest.mark.parametrize("pilot_months", (1, 12))
++def test_pilot_month_boundaries_return_evaluations(pilot_months):
++    params = replace(
++        Params(), land_available_ha=20.0, pilot_months=pilot_months
++    )
++    rows = enumerate_designs(params, load_census(FIXTURE))
++    assert rows
++    assert all(row.checks["duration"] for row in rows)
++
++
+ def test_pilot_over_twelve_months_fails_before_costing(monkeypatch):
+     def unexpected_costing(*args, **kwargs):
+         pytest.fail("compute_costs must not run for an overlong pilot")

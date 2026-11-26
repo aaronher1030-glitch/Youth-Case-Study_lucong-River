@@ -1,0 +1,312 @@
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-3/head/river_model/process.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-3/fix-1-head/river_model/process.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-3/head/river_model/process.py	2026-11-25 08:06:18.702899400 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-3/fix-1-head/river_model/process.py	2026-11-25 08:12:59.593760700 +0800
+@@ -1,11 +1,62 @@
+ from __future__ import annotations
+ 
+ from dataclasses import dataclass
++from math import isfinite
+ from typing import Sequence
+ 
+ from river_model.inputs import Params, Shed, eligible_sheds
+ 
+ 
++_NONNEGATIVE_PARAMETERS = (
++    "manure_kg_head_day",
++    "washwater_l_head_day",
++    "ch4_yield",
++)
++_FRACTION_PARAMETERS = (
++    "dm_frac",
++    "vs_frac_dm",
++    "vs_destroyed",
++    "n_frac_dm",
++)
++_POSITIVE_PARAMETERS = (
++    "ch4_mj_m3",
++    "lpg_mj_kg",
++    "rice_n_kg_ha",
++    "tanker_m3",
++)
++_PROCESS_PARAMETERS = (
++    *_NONNEGATIVE_PARAMETERS,
++    *_FRACTION_PARAMETERS,
++    "ch4_frac",
++    *_POSITIVE_PARAMETERS,
++)
++
++
++def _validate_finite_number(name: str, value: object) -> None:
++    if isinstance(value, bool) or not isinstance(value, (int, float)) or not isfinite(value):
++        raise ValueError(f"{name} must be a finite number")
++
++
++def _validate_process_parameters(params: Params) -> None:
++    for name in _PROCESS_PARAMETERS:
++        _validate_finite_number(name, getattr(params, name))
++
++    for name in _NONNEGATIVE_PARAMETERS:
++        if getattr(params, name) < 0:
++            raise ValueError(f"{name} must be nonnegative")
++
++    for name in _FRACTION_PARAMETERS:
++        if not 0 <= getattr(params, name) <= 1:
++            raise ValueError(f"{name} must lie in [0, 1]")
++
++    if not 0 < params.ch4_frac <= 1:
++        raise ValueError("ch4_frac must lie in (0, 1]")
++
++    for name in _POSITIVE_PARAMETERS:
++        if getattr(params, name) <= 0:
++            raise ValueError(f"{name} must be strictly positive")
++
++
+ @dataclass(frozen=True)
+ class ProcessResult:
+     heads: int
+@@ -27,7 +78,13 @@
+ 
+ 
+ def compute_process(params: Params, sheds: Sequence[Shed]) -> ProcessResult:
++    _validate_process_parameters(params)
+     active = eligible_sheds(sheds)
++    for shed in active:
++        _validate_finite_number(f"heads for shed {shed.shed_id}", shed.heads)
++        if shed.heads < 0:
++            raise ValueError(f"heads for shed {shed.shed_id} must be nonnegative")
++
+     heads = sum(s.heads for s in active)
+     manure = heads * params.manure_kg_head_day
+     wash = heads * params.washwater_l_head_day / 1000.0
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-3/head/tests/test_process.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-3/fix-1-head/tests/test_process.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-3/head/tests/test_process.py	2026-11-25 08:06:18.855010700 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-3/fix-1-head/tests/test_process.py	2026-11-25 08:13:00.706553900 +0800
+@@ -3,7 +3,131 @@
+ import pytest
+ 
+ from river_model.inputs import Params, Shed
+-from river_model.process import compute_process
++from river_model.process import ProcessResult, compute_process
++
++
++_PROCESS_PARAMETERS = (
++    "manure_kg_head_day",
++    "washwater_l_head_day",
++    "dm_frac",
++    "vs_frac_dm",
++    "vs_destroyed",
++    "ch4_yield",
++    "ch4_frac",
++    "ch4_mj_m3",
++    "lpg_mj_kg",
++    "n_frac_dm",
++    "rice_n_kg_ha",
++    "tanker_m3",
++)
++
++
++def test_independent_hand_calculation_for_all_outputs():
++    sheds = (Shed("S01", "Santiago", 3, True, "test"),)
++    params = Params(
++        manure_kg_head_day=4.0,
++        washwater_l_head_day=10.0,
++        dm_frac=0.25,
++        vs_frac_dm=0.80,
++        vs_destroyed=0.50,
++        ch4_yield=0.40,
++        ch4_frac=0.60,
++        ch4_mj_m3=30.0,
++        lpg_mj_kg=45.0,
++        n_frac_dm=0.05,
++        rice_n_kg_ha=100.0,
++        tanker_m3=3.0,
++    )
++
++    result = compute_process(params, sheds)
++
++    assert result.heads == 3
++    assert result.manure_kg_day == pytest.approx(12.0)
++    assert result.wash_m3_day == pytest.approx(0.03)
++    assert result.slurry_m3_day == pytest.approx(0.042)
++    assert result.dm_in_kg_day == pytest.approx(3.0)
++    assert result.vs_in_kg_day == pytest.approx(2.4)
++    assert result.vs_destroyed_kg_day == pytest.approx(1.2)
++    assert result.vs_remaining_kg_day == pytest.approx(1.2)
++    assert result.dm_remaining_kg_day == pytest.approx(1.8)
++    assert result.ch4_m3_day == pytest.approx(0.48)
++    assert result.biogas_m3_day == pytest.approx(0.8)
++    assert result.lpg_kg_day == pytest.approx(0.32)
++    assert result.nutrient_n_kg_day == pytest.approx(0.09)
++    assert result.land_ha_required == pytest.approx(0.3285)
++    assert result.trips_week == pytest.approx(0.098)
++    assert result.vs_balance_error_pct == pytest.approx(0.0)
++
++
++def test_empty_eligible_set_has_all_zero_outputs():
++    result = compute_process(Params(), ())
++
++    assert result == ProcessResult(
++        heads=0,
++        manure_kg_day=0.0,
++        wash_m3_day=0.0,
++        slurry_m3_day=0.0,
++        dm_in_kg_day=0.0,
++        vs_in_kg_day=0.0,
++        vs_destroyed_kg_day=0.0,
++        vs_remaining_kg_day=0.0,
++        dm_remaining_kg_day=0.0,
++        vs_balance_error_pct=0.0,
++        ch4_m3_day=0.0,
++        biogas_m3_day=0.0,
++        lpg_kg_day=0.0,
++        nutrient_n_kg_day=0.0,
++        land_ha_required=0.0,
++        trips_week=0.0,
++    )
++
++
++def test_zero_quantity_fraction_and_head_boundaries_are_valid():
++    params = Params(
++        manure_kg_head_day=0.0,
++        washwater_l_head_day=0.0,
++        dm_frac=0.0,
++        vs_frac_dm=0.0,
++        vs_destroyed=0.0,
++        ch4_yield=0.0,
++        n_frac_dm=0.0,
++    )
++    sheds = (Shed("S01", "Santiago", 0, True, "test"),)
++
++    assert compute_process(params, sheds) == ProcessResult(
++        heads=0,
++        manure_kg_day=0.0,
++        wash_m3_day=0.0,
++        slurry_m3_day=0.0,
++        dm_in_kg_day=0.0,
++        vs_in_kg_day=0.0,
++        vs_destroyed_kg_day=0.0,
++        vs_remaining_kg_day=0.0,
++        dm_remaining_kg_day=0.0,
++        vs_balance_error_pct=0.0,
++        ch4_m3_day=0.0,
++        biogas_m3_day=0.0,
++        lpg_kg_day=0.0,
++        nutrient_n_kg_day=0.0,
++        land_ha_required=0.0,
++        trips_week=0.0,
++    )
++
++
++def test_unit_fraction_boundaries_are_valid():
++    params = Params(
++        dm_frac=1.0,
++        vs_frac_dm=1.0,
++        vs_destroyed=1.0,
++        ch4_frac=1.0,
++        n_frac_dm=1.0,
++    )
++    sheds = (Shed("S01", "Santiago", 3, True, "test"),)
++
++    result = compute_process(params, sheds)
++
++    assert result.vs_destroyed_kg_day == result.vs_in_kg_day
++    assert result.biogas_m3_day == result.ch4_m3_day
+ 
+ 
+ def test_two_shed_hand_calculation():
+@@ -44,3 +168,95 @@
+     result = compute_process(Params(), sheds)
+     assert result.manure_kg_day == 0.0
+     assert result.trips_week == 0.0
++
++
++@pytest.mark.parametrize(
++    ("parameter", "value"),
++    [
++        ("manure_kg_head_day", -1.0),
++        ("washwater_l_head_day", -1.0),
++        ("ch4_yield", -1.0),
++    ],
++)
++def test_rejects_negative_process_quantities(parameter, value):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match=parameter):
++        compute_process(replace(Params(), **{parameter: value}), sheds)
++
++
++@pytest.mark.parametrize("parameter", _PROCESS_PARAMETERS)
++@pytest.mark.parametrize("value", [float("nan"), float("inf")])
++def test_rejects_non_finite_process_parameters(parameter, value):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match=parameter):
++        compute_process(replace(Params(), **{parameter: value}), sheds)
++
++
++@pytest.mark.parametrize(
++    ("parameter", "value"),
++    [
++        ("dm_frac", -0.01),
++        ("dm_frac", 1.01),
++        ("vs_frac_dm", -0.01),
++        ("vs_frac_dm", 1.01),
++        ("vs_destroyed", -0.01),
++        ("vs_destroyed", 1.01),
++        ("n_frac_dm", -0.01),
++        ("n_frac_dm", 1.01),
++        ("ch4_frac", -0.01),
++        ("ch4_frac", 0.0),
++        ("ch4_frac", 1.01),
++    ],
++)
++def test_rejects_out_of_range_fractions(parameter, value):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match=parameter):
++        compute_process(replace(Params(), **{parameter: value}), sheds)
++
++
++@pytest.mark.parametrize(
++    ("parameter", "value"),
++    [
++        ("ch4_mj_m3", 0.0),
++        ("ch4_mj_m3", -1.0),
++        ("lpg_mj_kg", 0.0),
++        ("lpg_mj_kg", -1.0),
++        ("rice_n_kg_ha", 0.0),
++        ("rice_n_kg_ha", -1.0),
++        ("tanker_m3", 0.0),
++        ("tanker_m3", -1.0),
++    ],
++)
++def test_rejects_nonpositive_energy_uptake_and_transport_parameters(parameter, value):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match=parameter):
++        compute_process(replace(Params(), **{parameter: value}), sheds)
++
++
++@pytest.mark.parametrize("parameter", _PROCESS_PARAMETERS)
++def test_rejects_nonnumeric_process_parameters(parameter):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match=parameter):
++        compute_process(replace(Params(), **{parameter: "invalid"}), sheds)
++
++
++@pytest.mark.parametrize("heads", [-1, float("nan"), float("inf"), "3", None, True])
++def test_rejects_invalid_eligible_shed_heads(heads):
++    sheds = (Shed("S01", "Santiago", heads, True, "test"),)
++    with pytest.raises(ValueError, match="heads") as error:
++        compute_process(Params(), sheds)
++    assert "S01" in str(error.value)
++
++
++@pytest.mark.parametrize(
++    ("parameter", "value"),
++    [
++        ("ch4_frac", 0.0),
++        ("lpg_mj_kg", 0.0),
++        ("rice_n_kg_ha", 0.0),
++        ("tanker_m3", 0.0),
++    ],
++)
++def test_rejects_invalid_denominators_without_eligible_heads(parameter, value):
++    with pytest.raises(ValueError, match=parameter):
++        compute_process(replace(Params(), **{parameter: value}), ())

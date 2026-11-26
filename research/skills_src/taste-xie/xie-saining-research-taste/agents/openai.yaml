@@ -1,0 +1,4 @@
+interface:
+  display_name: "Xie Saining Research Taste"
+  short_description: "Research taste, problem framing, and AI research judgment"
+  default_prompt: "Use $xie-saining-research-taste to evaluate my research idea and improve its problem framing, experiment plan, and story."

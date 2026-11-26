@@ -1,0 +1,171 @@
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/requirements-dev.txt .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/requirements-dev.txt
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/requirements-dev.txt	2026-11-25 07:19:38.640819500 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/requirements-dev.txt	1970-01-01 08:00:00.000000000 +0800
+@@ -1,5 +0,0 @@
+--r sim/requirements.txt
+-pytest==9.0.3
+-streamlit==1.67.0
+-plotly==7.1.0
+-openpyxl==3.1.5
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/__init__.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/river_model/__init__.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/__init__.py	2026-11-25 07:19:37.985828300 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/river_model/__init__.py	1970-01-01 08:00:00.000000000 +0800
+@@ -1 +0,0 @@
+-"""Headless economic model for the Lucong River study."""
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/inputs.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/river_model/inputs.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/inputs.py	2026-11-25 07:19:37.999826600 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/river_model/inputs.py	2026-11-25 07:31:20.623075300 +0800
+@@ -379,6 +379,13 @@
+                 raise ValueError(f"duplicate shed_id: {shed_id}")
+             seen_ids.add(shed_id)
+ 
++            barangay = (row["barangay"] or "").strip()
++            if not barangay:
++                raise ValueError("barangay must not be blank")
++            source = (row["source"] or "").strip()
++            if not source:
++                raise ValueError("source must not be blank")
++
+             try:
+                 heads = int(row["heads"])
+             except (TypeError, ValueError) as exc:
+@@ -395,10 +402,10 @@
+             sheds.append(
+                 Shed(
+                     shed_id=shed_id,
+-                    barangay=row["barangay"],
++                    barangay=barangay,
+                     heads=heads,
+                     drains_to_reach=drains_to_reach,
+-                    source=row["source"],
++                    source=source,
+                 )
+             )
+     return tuple(sheds)
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/synthetic.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/river_model/synthetic.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/river_model/synthetic.py	2026-11-25 07:19:38.068400700 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/river_model/synthetic.py	2026-11-25 07:31:20.667639300 +0800
+@@ -58,19 +58,13 @@
+         )
+         connected = bool(rng.random() < connection_probability)
+         barangay = str(rng.choice(spec.barangays))
+-        source = (
+-            f"synthetic; scenario={scenario_id}; seed={seed}; "
+-            f"prior=sheds {spec.sheds_low}-{spec.sheds_high}, "
+-            f"heads triangular({spec.heads_low:g},{spec.heads_mode:g},{spec.heads_high:g}), "
+-            f"connection={connection_probability:.2f}"
+-        )
+         sheds.append(
+             Shed(
+                 shed_id=f"SYN-{scenario_id:04d}-{index:02d}",
+                 barangay=barangay,
+                 heads=heads,
+                 drains_to_reach=connected,
+-                source=source,
++                source="synthetic",
+             )
+         )
+ 
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/fixtures/census.csv .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/tests/fixtures/census.csv
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/fixtures/census.csv	2026-11-25 07:19:38.514703800 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/tests/fixtures/census.csv	1970-01-01 08:00:00.000000000 +0800
+@@ -1,4 +0,0 @@
+-shed_id,barangay,heads,drains_to_reach,source
+-S01,Santiago,10,true,MENRO census 2026-11-24
+-S02,Santiago,12,true,Barangay census 2026-11-24
+-S03,Alfonso,8,unknown,Team estimate 2026-11-24
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/test_inputs.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/tests/test_inputs.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/test_inputs.py	2026-11-25 07:19:38.275597300 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/tests/test_inputs.py	2026-11-25 07:31:20.768198600 +0800
+@@ -44,6 +44,35 @@
+         load_census(path)
+ 
+ 
++@pytest.mark.parametrize(
++    ("row", "message"),
++    [
++        ("S01,,10,true,test\n", "barangay must not be blank"),
++        ("S01,   ,10,true,test\n", "barangay must not be blank"),
++        ("S01\n", "barangay must not be blank"),
++        ("S01,Santiago,10,true,\n", "source must not be blank"),
++        ("S01,Santiago,10,true,   \n", "source must not be blank"),
++        ("S01,Santiago,10,true\n", "source must not be blank"),
++    ],
++    ids=[
++        "blank-barangay",
++        "whitespace-barangay",
++        "truncated-barangay",
++        "blank-source",
++        "whitespace-source",
++        "truncated-source",
++    ],
++)
++def test_census_rejects_blank_or_missing_provenance(tmp_path: Path, row: str, message: str):
++    path = tmp_path / "bad.csv"
++    path.write_text(
++        "shed_id,barangay,heads,drains_to_reach,source\n" + row,
++        encoding="utf-8",
++    )
++    with pytest.raises(ValueError, match=message):
++        load_census(path)
++
++
+ def test_override_parses_numbers_and_preserves_base_object():
+     base = Params()
+     changed = apply_overrides(base, {"q_m3_s": "0.08", "land_available_ha": "12.5"})
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/test_synthetic.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/tests/test_synthetic.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/head/tests/test_synthetic.py	2026-11-25 07:19:38.322562100 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/tests/test_synthetic.py	2026-11-25 07:31:20.776208800 +0800
+@@ -1,3 +1,4 @@
++from collections import Counter
+ from dataclasses import replace
+ from pathlib import Path
+ 
+@@ -30,8 +31,45 @@
+ 
+ def test_every_generated_row_is_labelled_synthetic():
+     sheds = generate_synthetic_census(SyntheticSpec(), scenario_id=3, seed=2026)
+-    assert all(shed.source.startswith("synthetic;") for shed in sheds)
+-    assert all("scenario=3" in shed.source for shed in sheds)
++    assert all(shed.source == "synthetic" for shed in sheds)
++    assert all(shed.shed_id.startswith("SYN-0003-") for shed in sheds)
++
++
++def test_synthetic_prior_uses_equal_weights_deterministically():
++    n_scenarios = 200
++    sheds_per_scenario = 200
++    spec = SyntheticSpec(sheds_low=sheds_per_scenario, sheds_high=sheds_per_scenario)
++    scenarios = [
++        generate_synthetic_census(spec, scenario_id, seed=2025 + scenario_id)
++        for scenario_id in range(1, n_scenarios + 1)
++    ]
++
++    selected_levels = Counter(
++        min(
++            spec.connection_levels,
++            key=lambda level: abs(sum(shed.drains_to_reach for shed in sheds) / len(sheds) - level),
++        )
++        for sheds in scenarios
++    )
++    expected_scenarios = n_scenarios / len(spec.connection_levels)
++    connection_chi_square = sum(
++        (selected_levels[level] - expected_scenarios) ** 2 / expected_scenarios
++        for level in spec.connection_levels
++    )
++    # 200 fixed-seed draws give ample power; chi-square(df=4) < 20 has p < 0.001.
++    assert set(selected_levels) == set(spec.connection_levels)
++    assert connection_chi_square < 20.0
++
++    barangay_counts = Counter(shed.barangay for sheds in scenarios for shed in sheds)
++    total_sheds = n_scenarios * sheds_per_scenario
++    expected_barangays = total_sheds / len(spec.barangays)
++    barangay_chi_square = sum(
++        (barangay_counts[barangay] - expected_barangays) ** 2 / expected_barangays
++        for barangay in spec.barangays
++    )
++    # 40,000 fixed-seed assignments give ample power; chi-square(df=1) < 20 has p < 0.001.
++    assert set(barangay_counts) == set(spec.barangays)
++    assert barangay_chi_square < 20.0
+ 
+ 
+ def test_write_and_load_round_trip(tmp_path: Path):

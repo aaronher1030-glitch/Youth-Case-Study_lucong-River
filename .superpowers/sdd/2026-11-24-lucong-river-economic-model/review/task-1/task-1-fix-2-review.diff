@@ -1,0 +1,107 @@
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/tests/test_synthetic.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-2-head/tests/test_synthetic.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-1-head/tests/test_synthetic.py	2026-11-25 07:31:20.776208800 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-1/fix-2-head/tests/test_synthetic.py	2026-11-25 07:43:00.840110200 +0800
+@@ -1,9 +1,10 @@
+-from collections import Counter
+ from dataclasses import replace
+ from pathlib import Path
+ 
++import numpy as np
+ import pytest
+ 
++from river_model import synthetic
+ from river_model.inputs import load_census
+ from river_model.synthetic import (
+     SyntheticSpec,
+@@ -12,6 +13,26 @@
+ )
+ 
+ 
++class _RecordingRNG:
++    def __init__(self, rng):
++        self._rng = rng
++        self.choice_calls = []
++
++    def integers(self, *args, **kwargs):
++        return self._rng.integers(*args, **kwargs)
++
++    def triangular(self, *args, **kwargs):
++        return self._rng.triangular(*args, **kwargs)
++
++    def random(self, *args, **kwargs):
++        return self._rng.random(*args, **kwargs)
++
++    def choice(self, *args, **kwargs):
++        candidates = args[0] if args else kwargs["a"]
++        self.choice_calls.append((tuple(candidates), args[1:], kwargs))
++        return self._rng.choice(*args, **kwargs)
++
++
+ def test_fixed_seed_is_reproducible():
+     spec = SyntheticSpec()
+     a = generate_synthetic_census(spec, scenario_id=1, seed=2026)
+@@ -35,41 +56,29 @@
+     assert all(shed.shed_id.startswith("SYN-0003-") for shed in sheds)
+ 
+ 
+-def test_synthetic_prior_uses_equal_weights_deterministically():
+-    n_scenarios = 200
+-    sheds_per_scenario = 200
+-    spec = SyntheticSpec(sheds_low=sheds_per_scenario, sheds_high=sheds_per_scenario)
+-    scenarios = [
+-        generate_synthetic_census(spec, scenario_id, seed=2025 + scenario_id)
+-        for scenario_id in range(1, n_scenarios + 1)
+-    ]
+-
+-    selected_levels = Counter(
+-        min(
+-            spec.connection_levels,
+-            key=lambda level: abs(sum(shed.drains_to_reach for shed in sheds) / len(sheds) - level),
+-        )
+-        for sheds in scenarios
+-    )
+-    expected_scenarios = n_scenarios / len(spec.connection_levels)
+-    connection_chi_square = sum(
+-        (selected_levels[level] - expected_scenarios) ** 2 / expected_scenarios
+-        for level in spec.connection_levels
+-    )
+-    # 200 fixed-seed draws give ample power; chi-square(df=4) < 20 has p < 0.001.
+-    assert set(selected_levels) == set(spec.connection_levels)
+-    assert connection_chi_square < 20.0
+-
+-    barangay_counts = Counter(shed.barangay for sheds in scenarios for shed in sheds)
+-    total_sheds = n_scenarios * sheds_per_scenario
+-    expected_barangays = total_sheds / len(spec.barangays)
+-    barangay_chi_square = sum(
+-        (barangay_counts[barangay] - expected_barangays) ** 2 / expected_barangays
+-        for barangay in spec.barangays
+-    )
+-    # 40,000 fixed-seed assignments give ample power; chi-square(df=1) < 20 has p < 0.001.
+-    assert set(barangay_counts) == set(spec.barangays)
+-    assert barangay_chi_square < 20.0
++def test_synthetic_prior_uses_equal_weights_deterministically(monkeypatch):
++    spec = SyntheticSpec(sheds_low=1, sheds_high=1)
++    recording_rng = _RecordingRNG(np.random.default_rng(2026))
++    monkeypatch.setattr(synthetic.np.random, "default_rng", lambda _seed: recording_rng)
++
++    sheds = generate_synthetic_census(spec, scenario_id=1, seed=2026)
++
++    assert len(sheds) == 1
++    assert len(recording_rng.choice_calls) == 2
++    (connection_levels, connection_args, connection_kwargs), (
++        barangays,
++        barangay_args,
++        barangay_kwargs,
++    ) = recording_rng.choice_calls
++    assert connection_levels == spec.connection_levels
++    assert barangays == spec.barangays
++    for positional_args, keyword_args in (
++        (connection_args, connection_kwargs),
++        (barangay_args, barangay_kwargs),
++    ):
++        # p is the fourth choice parameter, after a, size, and replace.
++        assert len(positional_args) < 3
++        assert "p" not in keyword_args
+ 
+ 
+ def test_write_and_load_round_trip(tmp_path: Path):

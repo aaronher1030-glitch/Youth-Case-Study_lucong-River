@@ -1,0 +1,3 @@
+uplift,arm_diff_total,arm_diff_arrival_channel,arm_diff_speed_channel,arrival_share,arm2_rate_lag_matched,arrival_channel_means
+0.0,0.137,0.085,0.052,0.62,0.493,access work only
+0.15,0.287,0.22,0.067,0.767,0.628,access work + awareness

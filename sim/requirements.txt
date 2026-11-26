@@ -1,0 +1,14 @@
+# Simulation environment — tested 14 November 2026
+# Python 3.13.6 on Windows 11. Python >= 3.10 should be sufficient (dataclasses,
+# PEP 604 unions in annotations, math.floor on floats).
+#
+# Install:   python -m pip install -r sim/requirements.txt
+# Verify:    python -c "import simpy, numpy, matplotlib; print('ok')"
+
+simpy==4.1.2          # discrete-event engine
+numpy==2.3.4          # distributions and percentiles
+matplotlib==3.11.2    # figure only; run_scenarios.py forces the Agg backend
+
+# Not required to run the model, but useful for inspecting sim/outputs/*.csv
+# in a notebook. Commented out so the install stays minimal.
+# pandas==2.3.3

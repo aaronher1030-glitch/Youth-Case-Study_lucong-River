@@ -1,0 +1,1192 @@
+Task 6 filesystem review package
+BASE: no-git filesystem snapshot review/task-6/base/
+HEAD: no-git filesystem snapshot review/task-6/head/
+
+diff -ruN '--exclude=__pycache__' '--exclude=*.pyc' '--exclude=.pytest_cache' .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-6/base/river_model/uncertainty.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-6/head/river_model/uncertainty.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-6/base/river_model/uncertainty.py	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-6/head/river_model/uncertainty.py	2026-11-25 09:59:29.142223100 +0800
+@@ -0,0 +1,428 @@
++from __future__ import annotations
++
++import math
++from dataclasses import dataclass, replace
++from numbers import Integral, Real
++from typing import Mapping, Sequence
++
++import numpy as np
++
++from river_model.design import Design, DesignEvaluation, constraint_feasible
++from river_model.inputs import Params, Shed, eligible_sheds
++
++
++@dataclass(frozen=True)
++class UncertaintySpec:
++    q_low: float = 0.02
++    q_high: float = 0.20
++    e_low: float = 1.0e8
++    e_high: float = 1.0e10
++    eta_low: float = 0.50
++    eta_mode: float = 0.80
++    eta_high: float = 1.00
++    p_enroll_low: float = 0.80
++    p_enroll_mode: float = 0.95
++    p_enroll_high: float = 0.99
++    p_collect_low: float = 0.80
++    p_collect_mode: float = 0.95
++    p_collect_high: float = 0.99
++    p_retain_low: float = 0.80
++    p_retain_mode: float = 0.95
++    p_retain_high: float = 0.99
++    cost_low: float = 0.80
++    cost_mode: float = 1.00
++    cost_high: float = 1.30
++    n_draws: int = 20_000
++    seed: int = 2026
++
++
++@dataclass(frozen=True)
++class MonteCarloResult:
++    p_target: float | None
++    c_end_p10: float | None
++    c_end_p50: float | None
++    c_end_p90: float | None
++    eac_p10: float | None
++    eac_p50: float | None
++    eac_p90: float | None
++    invalid_fraction: float
++    valid_draws: int
++    endpoints: object
++
++
++_DRAW_KEYS = (
++    "q",
++    "e",
++    "eta",
++    "p_enroll",
++    "p_collect",
++    "p_retain",
++    "cost_multiplier",
++)
++_TRIANGULAR_PARAMETERS = (
++    ("eta", True),
++    ("p_enroll", True),
++    ("p_collect", True),
++    ("p_retain", True),
++    ("cost_multiplier", False),
++)
++_SENSITIVITY_FIELDS = {
++    "q_m3_s": "q",
++    "e_head_day": "e",
++    "eta": "eta",
++    "p_enroll": "p_enroll",
++    "p_collect": "p_collect",
++    "p_retain": "p_retain",
++    "cost_multiplier": "cost_multiplier",
++}
++
++
++def _validate_integer(name: str, value: object, minimum: int) -> None:
++    if isinstance(value, bool) or not isinstance(value, Integral):
++        raise ValueError(f"{name} must be an integer")
++    if value < minimum:
++        if minimum == 0:
++            raise ValueError(f"{name} must be a nonnegative integer")
++        raise ValueError(f"{name} must be a positive integer")
++
++
++def _validate_finite_number(name: str, value: object) -> float:
++    if isinstance(value, bool) or not isinstance(value, Real):
++        raise ValueError(f"{name} must be a finite number")
++    try:
++        number = float(value)
++    except (OverflowError, TypeError, ValueError) as exc:
++        raise ValueError(f"{name} must be a finite number") from exc
++    if not math.isfinite(number):
++        raise ValueError(f"{name} must be a finite number")
++    return number
++
++
++def _validate_spec(spec: UncertaintySpec) -> None:
++    _validate_integer("n_draws", spec.n_draws, 1)
++    _validate_integer("seed", spec.seed, 0)
++
++    for prefix in ("q", "e"):
++        low = _validate_finite_number(f"{prefix}_low", getattr(spec, f"{prefix}_low"))
++        high = _validate_finite_number(
++            f"{prefix}_high", getattr(spec, f"{prefix}_high")
++        )
++        if low <= 0.0 or high <= 0.0:
++            raise ValueError(f"{prefix}_low and {prefix}_high must be strictly positive")
++        if low > high:
++            raise ValueError(f"{prefix}_low must be less than or equal to {prefix}_high")
++
++    for parameter, is_fraction in _TRIANGULAR_PARAMETERS:
++        field_prefix = "cost" if parameter == "cost_multiplier" else parameter
++        low = _validate_finite_number(
++            f"{field_prefix}_low", getattr(spec, f"{field_prefix}_low")
++        )
++        mode = _validate_finite_number(
++            f"{field_prefix}_mode", getattr(spec, f"{field_prefix}_mode")
++        )
++        high = _validate_finite_number(
++            f"{field_prefix}_high", getattr(spec, f"{field_prefix}_high")
++        )
++        if not low <= mode <= high:
++            raise ValueError(
++                f"{field_prefix}_low must be <= {field_prefix}_mode <= {field_prefix}_high"
++            )
++        if is_fraction:
++            if not 0.0 <= low <= high <= 1.0:
++                raise ValueError(f"{parameter} bounds must lie in [0, 1]")
++        elif low < 0.0:
++            raise ValueError(f"{parameter} bounds must be nonnegative")
++
++
++def make_draws(spec: UncertaintySpec, n: int, seed: int) -> dict[str, object]:
++    _validate_integer("n", n, 1)
++    _validate_integer("seed", seed, 0)
++    _validate_spec(spec)
++
++    rng = np.random.default_rng(seed)
++    draws: dict[str, object] = {
++        "q": np.exp(rng.uniform(math.log(spec.q_low), math.log(spec.q_high), n)),
++        "e": np.exp(rng.uniform(math.log(spec.e_low), math.log(spec.e_high), n)),
++    }
++    for parameter, _ in _TRIANGULAR_PARAMETERS:
++        field_prefix = "cost" if parameter == "cost_multiplier" else parameter
++        low = getattr(spec, f"{field_prefix}_low")
++        mode = getattr(spec, f"{field_prefix}_mode")
++        high = getattr(spec, f"{field_prefix}_high")
++        if low == high:
++            # NumPy rejects a zero-width triangular distribution. Consume the
++            # same random stream width, then represent its degenerate limit.
++            rng.random(n)
++            draws[parameter] = np.full(n, low, dtype=float)
++        else:
++            draws[parameter] = rng.triangular(low, mode, high, n)
++    return draws
++
++
++def _validate_concentration_params(params: Params) -> None:
++    c0 = _validate_finite_number("c0_mpn_100ml", params.c0_mpn_100ml)
++    target = _validate_finite_number("target_mpn_100ml", params.target_mpn_100ml)
++    if c0 <= 0.0:
++        raise ValueError("c0_mpn_100ml must be positive")
++    if target < 0.0:
++        raise ValueError("target_mpn_100ml must be nonnegative")
++
++
++def _validate_draws(draws: Mapping[str, object]) -> dict[str, np.ndarray]:
++    if set(draws) != set(_DRAW_KEYS):
++        missing = sorted(set(_DRAW_KEYS) - set(draws))
++        extra = sorted(set(draws) - set(_DRAW_KEYS))
++        raise ValueError(f"draw mapping keys mismatch: missing={missing}, extra={extra}")
++
++    arrays: dict[str, np.ndarray] = {}
++    length: int | None = None
++    for key in _DRAW_KEYS:
++        try:
++            raw = np.asarray(draws[key])
++        except (TypeError, ValueError) as exc:
++            raise ValueError(f"draw {key} must be a numeric one-dimensional array") from exc
++        if raw.ndim != 1:
++            raise ValueError(f"draw {key} must be one-dimensional")
++        if length is None:
++            length = raw.size
++            if length == 0:
++                raise ValueError("draw arrays must be nonempty")
++        elif raw.size != length:
++            raise ValueError("draw arrays must have equal lengths")
++        if raw.dtype.kind not in {"i", "u", "f"}:
++            raise ValueError(f"draw {key} must contain numeric values")
++        try:
++            arrays[key] = raw.astype(float, copy=False)
++        except (TypeError, ValueError, OverflowError) as exc:
++            raise ValueError(f"draw {key} must contain numeric values") from exc
++    return arrays
++
++
++def _served_heads(sheds: Sequence[Shed], evaluation: DesignEvaluation) -> int:
++    by_id: dict[str, Shed] = {}
++    for shed in sheds:
++        if shed.shed_id in by_id:
++            raise ValueError(f"duplicate shed_id: {shed.shed_id}")
++        by_id[shed.shed_id] = shed
++    confirmed = {shed.shed_id: shed for shed in eligible_sheds(sheds)}
++
++    selected: set[str] = set()
++    heads = 0
++    for shed_id in evaluation.design.shed_ids:
++        if shed_id in selected:
++            raise ValueError(f"duplicate design shed_id: {shed_id}")
++        selected.add(shed_id)
++        if shed_id not in by_id:
++            raise ValueError(f"design shed_id is missing from census: {shed_id}")
++        if shed_id not in confirmed:
++            raise ValueError(f"design shed_id is not confirmed eligible: {shed_id}")
++        shed = confirmed[shed_id]
++        if isinstance(shed.heads, bool) or not isinstance(shed.heads, Real):
++            raise ValueError(f"heads for shed {shed_id} must be a finite number")
++        try:
++            shed_heads = float(shed.heads)
++        except (TypeError, ValueError, OverflowError) as exc:
++            raise ValueError(f"heads for shed {shed_id} must be a finite number") from exc
++        if not math.isfinite(shed_heads) or shed_heads < 0.0:
++            raise ValueError(f"heads for shed {shed_id} must be finite and nonnegative")
++        heads += shed.heads
++    return heads
++
++
++def _withheld_result(invalid_fraction: float) -> MonteCarloResult:
++    return MonteCarloResult(
++        p_target=None,
++        c_end_p10=None,
++        c_end_p50=None,
++        c_end_p90=None,
++        eac_p10=None,
++        eac_p50=None,
++        eac_p90=None,
++        invalid_fraction=invalid_fraction,
++        valid_draws=0,
++        endpoints=np.empty(0, dtype=float),
++    )
++
++
++def evaluate_design_uncertainty(
++    params: Params,
++    sheds: Sequence[Shed],
++    evaluation: DesignEvaluation,
++    draws: Mapping[str, object],
++) -> MonteCarloResult:
++    _validate_concentration_params(params)
++    arrays = _validate_draws(draws)
++    served_heads = _served_heads(sheds, evaluation)
++    base_eac = _validate_finite_number("costs.eac", evaluation.costs.eac)
++    if base_eac < 0.0:
++        raise ValueError("costs.eac must be nonnegative")
++
++    finite = np.ones_like(arrays["q"], dtype=bool)
++    for array in arrays.values():
++        finite &= np.isfinite(array)
++
++    with np.errstate(over="ignore", under="ignore", divide="ignore", invalid="ignore"):
++        l0 = params.c0_mpn_100ml * arrays["q"] * 86_400.0 * 10_000.0
++        l_target = arrays["eta"] * served_heads * arrays["e"]
++        r = l_target / l0
++        eac = base_eac * arrays["cost_multiplier"]
++
++    invalid = (
++        ~finite
++        | ~np.isfinite(l0)
++        | ~np.isfinite(l_target)
++        | ~np.isfinite(r)
++        | ~np.isfinite(eac)
++        | (arrays["q"] <= 0.0)
++        | (arrays["e"] < 0.0)
++        | (arrays["eta"] < 0.0)
++        | (arrays["eta"] > 1.0)
++        | (arrays["p_enroll"] < 0.0)
++        | (arrays["p_enroll"] > 1.0)
++        | (arrays["p_collect"] < 0.0)
++        | (arrays["p_collect"] > 1.0)
++        | (arrays["p_retain"] < 0.0)
++        | (arrays["p_retain"] > 1.0)
++        | (arrays["cost_multiplier"] < 0.0)
++        | (r > 1.0)
++        | (r < 0.0)
++    )
++    invalid_fraction = float(np.mean(invalid))
++    if invalid_fraction > 0.0:
++        return _withheld_result(invalid_fraction)
++
++    capture = arrays["p_enroll"] * arrays["p_collect"] * arrays["p_retain"]
++    c_end = params.c0_mpn_100ml * (1.0 - r * capture)
++    c_percentiles = np.percentile(c_end, (10.0, 50.0, 90.0))
++    eac_percentiles = np.percentile(eac, (10.0, 50.0, 90.0))
++    return MonteCarloResult(
++        p_target=float(np.mean(c_end <= params.target_mpn_100ml)),
++        c_end_p10=float(c_percentiles[0]),
++        c_end_p50=float(c_percentiles[1]),
++        c_end_p90=float(c_percentiles[2]),
++        eac_p10=float(eac_percentiles[0]),
++        eac_p50=float(eac_percentiles[1]),
++        eac_p90=float(eac_percentiles[2]),
++        invalid_fraction=0.0,
++        valid_draws=int(arrays["q"].size),
++        endpoints=c_end,
++    )
++
++
++def run_uncertainty(
++    params: Params,
++    sheds: Sequence[Shed],
++    evaluations: Sequence[DesignEvaluation],
++    spec: UncertaintySpec,
++) -> dict[Design, MonteCarloResult]:
++    draws = make_draws(spec, spec.n_draws, spec.seed)
++    return {
++        evaluation.design: evaluate_design_uncertainty(
++            params, sheds, evaluation, draws
++        )
++        for evaluation in evaluations
++        if constraint_feasible(evaluation)
++    }
++
++
++def _validate_target_probability(params: Params) -> float:
++    target = _validate_finite_number("target_probability", params.target_probability)
++    if not 0.0 <= target <= 1.0:
++        raise ValueError("target_probability must lie in [0, 1]")
++    return target
++
++
++def _meets_threshold(probability: float | None, threshold: float) -> bool:
++    return (
++        probability is not None
++        and math.isfinite(probability)
++        and 0.0 <= probability <= 1.0
++        and probability >= threshold
++    )
++
++
++def select_robust_design(
++    params: Params,
++    evaluations: Sequence[DesignEvaluation],
++    results: Mapping[Design, MonteCarloResult],
++) -> DesignEvaluation | None:
++    threshold = _validate_target_probability(params)
++    candidates = [
++        evaluation
++        for evaluation in evaluations
++        if constraint_feasible(evaluation)
++        and evaluation.design in results
++        and _meets_threshold(
++            results[evaluation.design].p_target,
++            threshold,
++        )
++    ]
++    if not candidates:
++        return None
++    return min(
++        candidates,
++        key=lambda evaluation: (
++            evaluation.costs.eac,
++            evaluation.costs.cash_12m,
++            -len(evaluation.design.shed_ids),
++        ),
++    )
++
++
++def _fixed_spec(
++    spec: UncertaintySpec, parameter: str, setting: str
++) -> tuple[UncertaintySpec, float]:
++    if parameter in ("q_m3_s", "e_head_day"):
++        draw_name = _SENSITIVITY_FIELDS[parameter]
++        value = getattr(spec, f"{draw_name}_{setting}")
++        return replace(spec, **{f"{draw_name}_low": value, f"{draw_name}_high": value}), value
++
++    field_prefix = "cost" if parameter == "cost_multiplier" else parameter
++    value = getattr(spec, f"{field_prefix}_{setting}")
++    return (
++        replace(
++            spec,
++            **{
++                f"{field_prefix}_low": value,
++                f"{field_prefix}_mode": value,
++                f"{field_prefix}_high": value,
++            },
++        ),
++        value,
++    )
++
++
++def one_at_a_time(
++    params: Params,
++    sheds: Sequence[Shed],
++    evaluation: DesignEvaluation,
++    spec: UncertaintySpec,
++) -> list[dict[str, object]]:
++    threshold = _validate_target_probability(params)
++    baseline_draws = make_draws(spec, spec.n_draws, spec.seed)
++    baseline = evaluate_design_uncertainty(
++        params, sheds, evaluation, baseline_draws
++    )
++    baseline_decision = _meets_threshold(baseline.p_target, threshold)
++
++    rows: list[dict[str, object]] = []
++    for parameter in _SENSITIVITY_FIELDS:
++        for setting in ("low", "high"):
++            scenario, value = _fixed_spec(spec, parameter, setting)
++            scenario_draws = make_draws(scenario, scenario.n_draws, scenario.seed)
++            result = evaluate_design_uncertainty(
++                params, sheds, evaluation, scenario_draws
++            )
++            decision = _meets_threshold(result.p_target, threshold)
++            rows.append(
++                {
++                    "parameter": parameter,
++                    "setting": setting,
++                    "value": value,
++                    "p_target": result.p_target,
++                    "c_end_p50": result.c_end_p50,
++                    "eac_p50": result.eac_p50,
++                    "decision_changes": decision != baseline_decision,
++                }
++            )
++    return rows
+diff -ruN '--exclude=__pycache__' '--exclude=*.pyc' '--exclude=.pytest_cache' .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-6/base/tests/test_uncertainty.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-6/head/tests/test_uncertainty.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-6/base/tests/test_uncertainty.py	1970-01-01 08:00:00.000000000 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-6/head/tests/test_uncertainty.py	2026-11-25 09:59:29.429589500 +0800
+@@ -0,0 +1,752 @@
++from __future__ import annotations
++
++import math
++from dataclasses import replace
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from river_model import uncertainty as uncertainty_module
++from river_model.design import (
++    Design,
++    DesignEvaluation,
++    constraint_feasible,
++    enumerate_designs,
++)
++from river_model.inputs import Params, Shed, load_census
++from river_model.uncertainty import (
++    MonteCarloResult,
++    UncertaintySpec,
++    evaluate_design_uncertainty,
++    make_draws,
++    one_at_a_time,
++    run_uncertainty,
++    select_robust_design,
++)
++
++FIXTURE = Path(__file__).parent / "fixtures" / "census.csv"
++DRAW_KEYS = {
++    "q",
++    "e",
++    "eta",
++    "p_enroll",
++    "p_collect",
++    "p_retain",
++    "cost_multiplier",
++}
++TRIANGULAR_FIELDS = (
++    ("eta", True),
++    ("p_enroll", True),
++    ("p_collect", True),
++    ("p_retain", True),
++    ("cost_multiplier", False),
++)
++
++
++def _evaluation(
++    params: Params | None = None, sheds: tuple[Shed, ...] | None = None
++) -> DesignEvaluation:
++    if params is None:
++        params = replace(Params(), land_available_ha=20.0)
++    if sheds is None:
++        sheds = load_census(FIXTURE)
++    return enumerate_designs(params, sheds)[0]
++
++
++def _draws(**overrides: object) -> dict[str, np.ndarray]:
++    values: dict[str, object] = {
++        "q": np.array([1.0]),
++        "e": np.array([1.0e8]),
++        "eta": np.array([0.5]),
++        "p_enroll": np.array([1.0]),
++        "p_collect": np.array([1.0]),
++        "p_retain": np.array([1.0]),
++        "cost_multiplier": np.array([1.0]),
++    }
++    values.update(overrides)
++    return {key: np.asarray(value, dtype=float) for key, value in values.items()}
++
++
++def _probability_result(probability: float | None) -> MonteCarloResult:
++    return MonteCarloResult(
++        p_target=probability,
++        c_end_p10=None,
++        c_end_p50=None,
++        c_end_p90=None,
++        eac_p10=None,
++        eac_p50=None,
++        eac_p90=None,
++        invalid_fraction=0.0,
++        valid_draws=1,
++        endpoints=np.empty(0, dtype=float),
++    )
++
++
++def _candidate(
++    base: DesignEvaluation,
++    *,
++    shed_ids: tuple[str, ...],
++    eac: float,
++    cash_12m: float,
++    modules: int = 1,
++) -> DesignEvaluation:
++    return replace(
++        base,
++        design=Design(
++            shed_ids=shed_ids,
++            modules=modules,
++            tankers=1,
++            carts=1,
++            collection_days_week=1,
++        ),
++        costs=replace(base.costs, eac=eac, cash_12m=cash_12m),
++    )
++
++
++def test_production_defaults_are_twenty_thousand_draws_and_seed_2026():
++    spec = UncertaintySpec()
++    assert spec.n_draws == 20_000
++    assert spec.seed == 2026
++    assert Params().target_probability == 0.80
++
++
++def test_fixed_seed_is_reproducible_and_different_seed_changes_every_draw():
++    spec = UncertaintySpec()
++    first = make_draws(spec, 100, 2026)
++    repeated = make_draws(spec, 100, 2026)
++    different = make_draws(spec, 100, 2027)
++    assert set(first) == DRAW_KEYS
++    for key in DRAW_KEYS:
++        assert first[key].shape == (100,)
++        assert np.array_equal(first[key], repeated[key])
++        assert not np.array_equal(first[key], different[key])
++
++
++def test_log_uniform_and_triangular_draws_follow_the_specified_numpy_streams():
++    spec = UncertaintySpec(
++        q_low=0.01,
++        q_high=0.04,
++        e_low=2.0e8,
++        e_high=9.0e8,
++        eta_low=0.2,
++        eta_mode=0.7,
++        eta_high=0.9,
++        p_enroll_low=0.1,
++        p_enroll_mode=0.4,
++        p_enroll_high=0.8,
++        p_collect_low=0.3,
++        p_collect_mode=0.5,
++        p_collect_high=1.0,
++        p_retain_low=0.6,
++        p_retain_mode=0.8,
++        p_retain_high=0.95,
++        cost_low=0.5,
++        cost_mode=1.2,
++        cost_high=2.0,
++    )
++    n = 128
++    actual = make_draws(spec, n, 73)
++    rng = np.random.default_rng(73)
++    expected_q = np.exp(rng.uniform(math.log(0.01), math.log(0.04), n))
++    expected_e = np.exp(rng.uniform(math.log(2.0e8), math.log(9.0e8), n))
++    expected_eta = rng.triangular(0.2, 0.7, 0.9, n)
++    expected_enroll = rng.triangular(0.1, 0.4, 0.8, n)
++    expected_collect = rng.triangular(0.3, 0.5, 1.0, n)
++    expected_retain = rng.triangular(0.6, 0.8, 0.95, n)
++    expected_cost = rng.triangular(0.5, 1.2, 2.0, n)
++    np.testing.assert_array_equal(actual["q"], expected_q)
++    np.testing.assert_array_equal(actual["e"], expected_e)
++    np.testing.assert_array_equal(actual["eta"], expected_eta)
++    np.testing.assert_array_equal(actual["p_enroll"], expected_enroll)
++    np.testing.assert_array_equal(actual["p_collect"], expected_collect)
++    np.testing.assert_array_equal(actual["p_retain"], expected_retain)
++    np.testing.assert_array_equal(actual["cost_multiplier"], expected_cost)
++
++    statistical_spec = UncertaintySpec(
++        q_low=1.0,
++        q_high=4.0,
++        e_low=1.0e8,
++        e_high=1.0e9,
++        eta_low=0.0,
++        eta_mode=0.25,
++        eta_high=1.0,
++    )
++    statistical = make_draws(statistical_spec, 50_000, 2026)
++    assert np.mean(np.log(statistical["q"])) == pytest.approx(
++        (math.log(1.0) + math.log(4.0)) / 2.0, abs=0.025
++    )
++    assert np.median(statistical["q"]) == pytest.approx(2.0, rel=0.025)
++    assert np.mean(statistical["eta"]) == pytest.approx(
++        (0.0 + 0.25 + 1.0) / 3.0, abs=0.01
++    )
++    assert np.quantile(statistical["eta"], 0.25) == pytest.approx(
++        0.25, abs=0.01
++    )
++    assert np.all(statistical["q"] >= 1.0)
++    assert np.all(statistical["q"] <= 4.0)
++
++
++@pytest.mark.parametrize("prefix", ("q", "e"))
++@pytest.mark.parametrize(
++    "overrides",
++    (
++        {"low": 0.0},
++        {"low": -1.0},
++        {"high": 0.0},
++        {"high": -1.0},
++        {"low": 2.0, "high": 1.0},
++        {"low": math.nan},
++        {"high": math.inf},
++        {"high": -math.inf},
++        {"low": True},
++        {"high": "1.0"},
++    ),
++)
++def test_invalid_log_uniform_bounds_raise_parameter_specific_errors_before_drawing(
++    monkeypatch, prefix, overrides
++):
++    def unexpected_rng(*args, **kwargs):
++        pytest.fail("invalid specifications must be rejected before drawing")
++
++    monkeypatch.setattr(uncertainty_module.np.random, "default_rng", unexpected_rng)
++    field_values = {
++        f"{prefix}_low": 0.1,
++        f"{prefix}_high": 0.3,
++    }
++    field_values.update({f"{prefix}_{name}": value for name, value in overrides.items()})
++    spec = replace(UncertaintySpec(), **field_values)
++    with pytest.raises(ValueError, match=prefix):
++        make_draws(spec, 10, 2026)
++
++
++@pytest.mark.parametrize(("parameter", "is_fraction"), TRIANGULAR_FIELDS)
++@pytest.mark.parametrize(
++    "overrides",
++    (
++        {"low": 0.4, "mode": 0.3},
++        {"mode": 0.7, "high": 0.6},
++        {"low": 0.8, "high": 0.7},
++        {"low": math.nan},
++        {"mode": math.inf},
++        {"high": -math.inf},
++        {"low": False},
++        {"mode": "0.5"},
++    ),
++)
++def test_invalid_triangular_parameters_raise_before_drawing(
++    monkeypatch, parameter, is_fraction, overrides
++):
++    def unexpected_rng(*args, **kwargs):
++        pytest.fail("invalid specifications must be rejected before drawing")
++
++    monkeypatch.setattr(uncertainty_module.np.random, "default_rng", unexpected_rng)
++    valid = (0.2, 0.5, 0.8) if is_fraction else (0.5, 1.0, 1.5)
++    values = dict(zip(("low", "mode", "high"), valid))
++    values.update(overrides)
++    field_prefix = "cost" if parameter == "cost_multiplier" else parameter
++    spec = replace(
++        UncertaintySpec(),
++        **{f"{field_prefix}_{name}": value for name, value in values.items()},
++    )
++    with pytest.raises(ValueError, match="cost" if parameter == "cost_multiplier" else parameter):
++        make_draws(spec, 10, 2026)
++
++
++@pytest.mark.parametrize("parameter", ("eta", "p_enroll", "p_collect", "p_retain"))
++@pytest.mark.parametrize("position", ("low", "mode", "high"))
++@pytest.mark.parametrize("value", (-1.0e-12, 1.0 + 1.0e-12))
++def test_fraction_spec_bounds_are_strictly_bounded(parameter, position, value):
++    spec = replace(UncertaintySpec(), **{f"{parameter}_{position}": value})
++    with pytest.raises(ValueError, match=parameter):
++        make_draws(spec, 10, 2026)
++
++
++@pytest.mark.parametrize("position", ("low", "mode", "high"))
++def test_cost_spec_bounds_must_be_nonnegative(position):
++    spec = replace(UncertaintySpec(), **{f"cost_{position}": -1.0e-12})
++    with pytest.raises(ValueError, match="cost"):
++        make_draws(spec, 10, 2026)
++
++
++@pytest.mark.parametrize("n", (0, -1, 1.5, True, False, math.nan, math.inf, "10", None))
++def test_draw_count_must_be_a_positive_non_boolean_integer(n):
++    with pytest.raises(ValueError, match="n"):
++        make_draws(UncertaintySpec(), n, 2026)
++
++
++@pytest.mark.parametrize(
++    "seed", (-1, 1.5, True, False, math.nan, math.inf, "2026", None)
++)
++def test_seed_must_be_a_nonnegative_non_boolean_integer(seed):
++    with pytest.raises(ValueError, match="seed"):
++        make_draws(UncertaintySpec(), 10, seed)
++
++
++@pytest.mark.parametrize("n_draws", (0, -1, 1.5, True, False, math.nan, "10", None))
++def test_spec_draw_count_is_validated_even_with_explicit_n(n_draws):
++    with pytest.raises(ValueError, match="n_draws"):
++        make_draws(replace(UncertaintySpec(), n_draws=n_draws), 10, 2026)
++
++
++@pytest.mark.parametrize("seed", (-1, 1.5, True, False, math.nan, "2026", None))
++def test_spec_seed_is_validated_even_with_explicit_seed(seed):
++    with pytest.raises(ValueError, match="seed"):
++        make_draws(replace(UncertaintySpec(), seed=seed), 10, 2026)
++
++
++def test_zero_enrollment_cannot_meet_target():
++    params = replace(Params(), land_available_ha=20.0)
++    evaluation = _evaluation(params)
++    spec = UncertaintySpec(
++        q_low=0.10,
++        q_high=0.20,
++        e_low=1.0e8,
++        e_high=1.0e9,
++        n_draws=500,
++        seed=2026,
++    )
++    draws = make_draws(spec, 500, 2026)
++    draws["p_enroll"] = np.zeros(500)
++    result = evaluate_design_uncertainty(params, load_census(FIXTURE), evaluation, draws)
++    assert result.p_target == 0.0
++    assert result.invalid_fraction == 0.0
++    assert result.valid_draws == 500
++    np.testing.assert_array_equal(result.endpoints, np.full(500, params.c0_mpn_100ml))
++
++
++@pytest.mark.parametrize("r_excess", (1.0e-12, 1.0e-9, 1.0e-6))
++def test_any_r_above_one_withholds_all_claims_without_tolerance(r_excess):
++    params = replace(Params(), c0_mpn_100ml=100.0, target_mpn_100ml=50.0)
++    evaluation = _evaluation()
++    draws = _draws(
++        q=np.array([1.0 / (1.0 + r_excess), 1.0]),
++        e=np.array([86.4e9 / 22.0, 43.2e9 / 22.0]),
++        eta=np.ones(2),
++        p_enroll=np.ones(2),
++        p_collect=np.ones(2),
++        p_retain=np.ones(2),
++        cost_multiplier=np.ones(2),
++    )
++    result = evaluate_design_uncertainty(params, load_census(FIXTURE), evaluation, draws)
++    assert result.invalid_fraction == 0.5
++    assert result.valid_draws == 0
++    assert result.p_target is None
++    assert all(
++        value is None
++        for value in (
++            result.c_end_p10,
++            result.c_end_p50,
++            result.c_end_p90,
++            result.eac_p10,
++            result.eac_p50,
++            result.eac_p90,
++        )
++    )
++    assert isinstance(result.endpoints, np.ndarray)
++    assert result.endpoints.dtype == float
++    assert result.endpoints.size == 0
++
++
++@pytest.mark.parametrize("key", sorted(DRAW_KEYS))
++@pytest.mark.parametrize("nonfinite", (math.nan, math.inf, -math.inf))
++def test_nonfinite_draws_withhold_probability_and_retain_invalid_fraction(key, nonfinite):
++    params = replace(Params(), land_available_ha=20.0)
++    evaluation = _evaluation(params)
++    draws = _draws(**{key: np.array([nonfinite, nonfinite])})
++    for other_key in DRAW_KEYS - {key}:
++        draws[other_key] = np.ones(2)
++    result = evaluate_design_uncertainty(params, load_census(FIXTURE), evaluation, draws)
++    assert result.invalid_fraction == 1.0
++    assert result.valid_draws == 0
++    assert result.p_target is None
++    assert result.endpoints.size == 0
++
++
++@pytest.mark.parametrize(
++    ("key", "bad_value"),
++    (
++        ("q", 0.0),
++        ("q", -1.0),
++        ("e", -1.0),
++        ("eta", -1.0e-12),
++        ("eta", 1.0 + 1.0e-12),
++        ("p_enroll", -1.0e-12),
++        ("p_enroll", 1.0 + 1.0e-12),
++        ("p_collect", -1.0e-12),
++        ("p_collect", 1.0 + 1.0e-12),
++        ("p_retain", -1.0e-12),
++        ("p_retain", 1.0 + 1.0e-12),
++        ("cost_multiplier", -1.0e-12),
++    ),
++)
++def test_physically_invalid_draws_withhold_probability(key, bad_value):
++    params = replace(Params(), land_available_ha=20.0)
++    evaluation = _evaluation(params)
++    draws = _draws(**{key: np.array([1.0, bad_value, bad_value])})
++    for other_key in DRAW_KEYS - {key}:
++        draws[other_key] = np.ones(3)
++    result = evaluate_design_uncertainty(params, load_census(FIXTURE), evaluation, draws)
++    assert result.invalid_fraction == pytest.approx(2.0 / 3.0)
++    assert result.valid_draws == 0
++    assert result.p_target is None
++    assert result.endpoints.size == 0
++
++
++def test_valid_controlled_draws_recalculate_probability_percentiles_and_endpoints():
++    params = replace(Params(), c0_mpn_100ml=100.0, target_mpn_100ml=50.0)
++    base = _evaluation()
++    evaluation = replace(base, design=replace(base.design, shed_ids=("S01",)))
++    draws = _draws(
++        q=np.ones(5),
++        e=np.full(5, 8.64e9),
++        eta=np.array([0.0, 0.25, 0.5, 0.75, 1.0]),
++        p_enroll=np.ones(5),
++        p_collect=np.ones(5),
++        p_retain=np.ones(5),
++        cost_multiplier=np.array([1.0, 0.8, 1.3, 0.9, 1.1]),
++    )
++    result = evaluate_design_uncertainty(params, load_census(FIXTURE), evaluation, draws)
++    assert result.invalid_fraction == 0.0
++    assert result.valid_draws == 5
++    assert result.p_target == pytest.approx(3.0 / 5.0)
++    assert (result.c_end_p10, result.c_end_p50, result.c_end_p90) == (10.0, 50.0, 90.0)
++    assert result.eac_p10 == pytest.approx(evaluation.costs.eac * 0.84)
++    assert result.eac_p50 == pytest.approx(evaluation.costs.eac)
++    assert result.eac_p90 == pytest.approx(evaluation.costs.eac * 1.22)
++    np.testing.assert_array_equal(result.endpoints, np.array([100.0, 75.0, 50.0, 25.0, 0.0]))
++
++
++def test_design_specific_heads_exclude_nonselected_and_unconfirmed_sheds():
++    params = replace(Params(), c0_mpn_100ml=100.0, target_mpn_100ml=50.0)
++    base = _evaluation()
++    evaluation = replace(base, design=replace(base.design, shed_ids=("S01",)))
++    sheds = load_census(FIXTURE)
++    draws = _draws(
++        q=np.array([1.0]),
++        e=np.array([8.64e9]),
++        eta=np.array([0.5]),
++        p_enroll=np.array([1.0]),
++        p_collect=np.array([1.0]),
++        p_retain=np.array([1.0]),
++        cost_multiplier=np.array([1.0]),
++    )
++    result = evaluate_design_uncertainty(params, sheds, evaluation, draws)
++    assert result.p_target == 1.0
++    np.testing.assert_array_equal(result.endpoints, np.array([50.0]))
++
++
++@pytest.mark.parametrize("shed_id", ("MISSING", "S03"))
++def test_missing_or_unconfirmed_design_shed_ids_raise(shed_id):
++    params = replace(Params(), land_available_ha=20.0)
++    evaluation = _evaluation(params)
++    invalid = replace(evaluation, design=replace(evaluation.design, shed_ids=(shed_id,)))
++    with pytest.raises(ValueError, match=shed_id):
++        evaluate_design_uncertainty(
++            params, load_census(FIXTURE), invalid, _draws()
++        )
++
++
++def test_false_drainage_is_not_confirmed_eligible():
++    params = replace(Params(), land_available_ha=20.0)
++    evaluation = _evaluation(params)
++    sheds = (
++        Shed("S01", "Santiago", 10, True, "test"),
++        Shed("S02", "Santiago", 12, False, "test"),
++    )
++    invalid = replace(evaluation, design=replace(evaluation.design, shed_ids=("S02",)))
++    with pytest.raises(ValueError, match="S02"):
++        evaluate_design_uncertainty(params, sheds, invalid, _draws())
++
++
++@pytest.mark.parametrize(
++    ("field", "value"),
++    (
++        ("c0_mpn_100ml", 0.0),
++        ("c0_mpn_100ml", -1.0),
++        ("c0_mpn_100ml", math.nan),
++        ("c0_mpn_100ml", math.inf),
++        ("c0_mpn_100ml", True),
++        ("target_mpn_100ml", -1.0),
++        ("target_mpn_100ml", math.nan),
++        ("target_mpn_100ml", math.inf),
++        ("target_mpn_100ml", True),
++    ),
++)
++def test_invalid_concentration_parameters_raise(field, value):
++    params = replace(Params(), land_available_ha=20.0, **{field: value})
++    evaluation = _evaluation()
++    with pytest.raises(ValueError, match=field):
++        evaluate_design_uncertainty(params, load_census(FIXTURE), evaluation, _draws())
++
++
++@pytest.mark.parametrize(
++    "mutation",
++    (
++        lambda draws: draws.pop("q"),
++        lambda draws: draws.update(extra=np.ones(1)),
++        lambda draws: draws.update(q=np.array([1.0, 1.0])),
++        lambda draws: draws.update(q=np.ones((1, 1))),
++        lambda draws: draws.update(q=np.array(1.0)),
++        lambda draws: draws.update(q=np.empty(0)),
++        lambda draws: draws.update(q=np.array(["1.0"])),
++        lambda draws: draws.update(q=np.array([1.0 + 1.0j])),
++        lambda draws: draws.update(q=np.array([True])),
++    ),
++)
++def test_draw_mapping_requires_exact_nonempty_equal_numeric_vectors(mutation):
++    params = replace(Params(), land_available_ha=20.0)
++    draws = _draws()
++    mutation(draws)
++    with pytest.raises(ValueError):
++        evaluate_design_uncertainty(
++            params, load_census(FIXTURE), _evaluation(params), draws
++        )
++
++
++def test_run_uncertainty_excludes_infeasible_designs_and_uses_one_shared_draw_object(
++    monkeypatch,
++):
++    params = replace(Params(), land_available_ha=20.0)
++    sheds = load_census(FIXTURE)
++    evaluations = enumerate_designs(params, sheds)
++    infeasible = replace(
++        evaluations[0], checks={**evaluations[0].checks, "budget": False}
++    )
++    evaluations = [infeasible, *evaluations[1:]]
++    spec = UncertaintySpec(n_draws=128, seed=2026)
++    real_make_draws = uncertainty_module.make_draws
++    calls: list[tuple[int, int]] = []
++
++    def recording_make_draws(received_spec, n, seed):
++        calls.append((n, seed))
++        return real_make_draws(received_spec, n, seed)
++
++    monkeypatch.setattr(uncertainty_module, "make_draws", recording_make_draws)
++    results = run_uncertainty(params, sheds, evaluations, spec)
++    assert calls == [(128, 2026)]
++    feasible = [row for row in evaluations if constraint_feasible(row)]
++    assert set(results) == {row.design for row in feasible}
++    assert infeasible.design not in results
++
++    shared = real_make_draws(spec, 128, 2026)
++    for row in feasible:
++        expected = evaluate_design_uncertainty(params, sheds, row, shared)
++        actual = results[row.design]
++        assert actual.p_target == expected.p_target
++        assert actual.invalid_fraction == expected.invalid_fraction
++        assert actual.valid_draws == expected.valid_draws
++        assert (
++            actual.c_end_p10,
++            actual.c_end_p50,
++            actual.c_end_p90,
++            actual.eac_p10,
++            actual.eac_p50,
++            actual.eac_p90,
++        ) == (
++            expected.c_end_p10,
++            expected.c_end_p50,
++            expected.c_end_p90,
++            expected.eac_p10,
++            expected.eac_p50,
++            expected.eac_p90,
++        )
++        np.testing.assert_array_equal(actual.endpoints, expected.endpoints)
++
++
++def test_robust_selection_rejects_missing_withheld_below_threshold_and_infeasible():
++    params = replace(Params(), land_available_ha=20.0, target_probability=0.80)
++    base = _evaluation(params)
++    fallback = _candidate(base, shed_ids=("S01",), eac=200.0, cash_12m=200.0)
++    missing = _candidate(base, shed_ids=("S01",), eac=10.0, cash_12m=10.0, modules=2)
++    withheld = _candidate(base, shed_ids=("S01",), eac=20.0, cash_12m=20.0, modules=3)
++    below = _candidate(base, shed_ids=("S01",), eac=30.0, cash_12m=30.0, modules=4)
++    infeasible = replace(
++        _candidate(base, shed_ids=("S01",), eac=40.0, cash_12m=40.0, modules=5),
++        checks={**base.checks, "budget": False},
++    )
++    evaluations = [missing, withheld, below, infeasible, fallback]
++    results = {
++        withheld.design: _probability_result(None),
++        below.design: _probability_result(0.799999),
++        infeasible.design: _probability_result(1.0),
++        fallback.design: _probability_result(0.80),
++    }
++    assert select_robust_design(params, evaluations, results) is fallback
++
++
++def test_robust_selection_uses_eac_then_cash_then_descending_coverage():
++    params = replace(Params(), land_available_ha=20.0, target_probability=0.80)
++    base = _evaluation(params)
++    cheaper = _candidate(base, shed_ids=("S01",), eac=100.0, cash_12m=500.0)
++    less_cash = _candidate(base, shed_ids=("S01", "S02"), eac=200.0, cash_12m=100.0, modules=2)
++    evaluations = [less_cash, cheaper]
++    results = {row.design: _probability_result(1.0) for row in evaluations}
++    assert select_robust_design(params, evaluations, results) is cheaper
++
++    equal_eac = _candidate(base, shed_ids=("S01", "S02"), eac=200.0, cash_12m=100.0, modules=2)
++    more_coverage = _candidate(base, shed_ids=("S01", "S02"), eac=200.0, cash_12m=300.0, modules=3)
++    assert select_robust_design(
++        params, [more_coverage, equal_eac], {row.design: _probability_result(1.0) for row in (more_coverage, equal_eac)}
++    ) is equal_eac
++
++    narrow = _candidate(base, shed_ids=("S01",), eac=200.0, cash_12m=300.0, modules=4)
++    wide = _candidate(base, shed_ids=("S01", "S02"), eac=200.0, cash_12m=300.0, modules=5)
++    assert select_robust_design(
++        params, [narrow, wide], {row.design: _probability_result(1.0) for row in (narrow, wide)}
++    ) is wide
++
++
++@pytest.mark.parametrize("target_probability", (-0.01, 1.01, math.nan, math.inf, True, "0.8"))
++def test_robust_selection_validates_target_probability(target_probability):
++    params = replace(Params(), target_probability=target_probability)
++    with pytest.raises(ValueError, match="target_probability"):
++        select_robust_design(params, [], {})
++
++
++def test_robust_selection_returns_none_when_no_candidate_meets_threshold():
++    params = replace(Params(), land_available_ha=20.0, target_probability=0.80)
++    evaluation = _evaluation(params)
++    assert select_robust_design(
++        params, [evaluation], {evaluation.design: _probability_result(0.79)}
++    ) is None
++
++
++def test_one_at_a_time_has_exactly_fourteen_low_high_rows_and_required_keys():
++    params = replace(Params(), land_available_ha=20.0)
++    evaluation = _evaluation(params)
++    spec = UncertaintySpec(n_draws=500, seed=2026)
++    rows = one_at_a_time(params, load_census(FIXTURE), evaluation, spec)
++    expected_parameters = [
++        "q_m3_s",
++        "e_head_day",
++        "eta",
++        "p_enroll",
++        "p_collect",
++        "p_retain",
++        "cost_multiplier",
++    ]
++    expected_keys = {
++        "parameter",
++        "setting",
++        "value",
++        "p_target",
++        "c_end_p50",
++        "eac_p50",
++        "decision_changes",
++    }
++    assert len(rows) == 14
++    assert [(row["parameter"], row["setting"]) for row in rows] == [
++        (parameter, setting)
++        for parameter in expected_parameters
++        for setting in ("low", "high")
++    ]
++    assert all(set(row) == expected_keys for row in rows)
++    expected_values = {
++        "q_m3_s": (spec.q_low, spec.q_high),
++        "e_head_day": (spec.e_low, spec.e_high),
++        "eta": (spec.eta_low, spec.eta_high),
++        "p_enroll": (spec.p_enroll_low, spec.p_enroll_high),
++        "p_collect": (spec.p_collect_low, spec.p_collect_high),
++        "p_retain": (spec.p_retain_low, spec.p_retain_high),
++        "cost_multiplier": (spec.cost_low, spec.cost_high),
++    }
++    for row in rows:
++        assert row["value"] == expected_values[row["parameter"]][
++            0 if row["setting"] == "low" else 1
++        ]
++
++
++def test_cost_sensitivity_changes_median_eac_but_not_probability_or_decision():
++    params = replace(Params(), land_available_ha=20.0)
++    sheds = load_census(FIXTURE)
++    evaluation = _evaluation(params)
++    spec = UncertaintySpec(
++        q_low=0.10,
++        q_high=0.20,
++        e_low=1.0e8,
++        e_high=1.0e9,
++        n_draws=1_000,
++        seed=2026,
++    )
++    baseline = evaluate_design_uncertainty(
++        params, sheds, evaluation, make_draws(spec, spec.n_draws, spec.seed)
++    )
++    baseline_decision = (
++        baseline.p_target is not None and baseline.p_target >= params.target_probability
++    )
++    rows = one_at_a_time(params, sheds, evaluation, spec)
++    cost_rows = [row for row in rows if row["parameter"] == "cost_multiplier"]
++    assert len(cost_rows) == 2
++    assert cost_rows[0]["eac_p50"] == pytest.approx(evaluation.costs.eac * spec.cost_low)
++    assert cost_rows[1]["eac_p50"] == pytest.approx(evaluation.costs.eac * spec.cost_high)
++    assert cost_rows[0]["eac_p50"] != cost_rows[1]["eac_p50"]
++    for row in cost_rows:
++        assert row["p_target"] == baseline.p_target
++        assert row["decision_changes"] is baseline_decision
++
++
++def test_sensitivity_detects_a_controlled_decision_flip():
++    params = replace(
++        Params(),
++        c0_mpn_100ml=100.0,
++        target_mpn_100ml=75.0,
++        target_probability=0.80,
++        land_available_ha=20.0,
++    )
++    sheds = load_census(FIXTURE)
++    evaluation = _evaluation()
++    spec = UncertaintySpec(
++        q_low=0.05,
++        q_high=0.05,
++        e_low=4.32e9 / 44.0,
++        e_high=4.32e9 / 44.0,
++        eta_low=1.0,
++        eta_mode=1.0,
++        eta_high=1.0,
++        p_enroll_low=0.0,
++        p_enroll_mode=0.5,
++        p_enroll_high=1.0,
++        p_collect_low=1.0,
++        p_collect_mode=1.0,
++        p_collect_high=1.0,
++        p_retain_low=1.0,
++        p_retain_mode=1.0,
++        p_retain_high=1.0,
++        cost_low=1.0,
++        cost_mode=1.0,
++        cost_high=1.0,
++        n_draws=2_000,
++        seed=2026,
++    )
++    baseline = evaluate_design_uncertainty(
++        params, sheds, evaluation, make_draws(spec, spec.n_draws, spec.seed)
++    )
++    assert baseline.p_target is not None
++    assert baseline.p_target < params.target_probability
++    rows = one_at_a_time(params, sheds, evaluation, spec)
++    enrollment_rows = [row for row in rows if row["parameter"] == "p_enroll"]
++    assert enrollment_rows[0]["p_target"] == 0.0
++    assert enrollment_rows[0]["decision_changes"] is False
++    assert enrollment_rows[1]["p_target"] == 1.0
++    assert enrollment_rows[1]["decision_changes"] is True
++
++
++def test_twenty_thousand_draw_smoke_run_completes_without_selecting_withheld_results():
++    params = replace(Params(), land_available_ha=20.0)
++    sheds = load_census(FIXTURE)
++    evaluations = enumerate_designs(params, sheds)
++    results = run_uncertainty(params, sheds, evaluations, UncertaintySpec())
++    assert results
++    for result in results.values():
++        assert result.valid_draws in (0, 20_000)
++        if result.invalid_fraction > 0:
++            assert result.p_target is None
++            assert result.endpoints.size == 0
++        else:
++            assert result.endpoints.shape == (20_000,)
++    selected = select_robust_design(params, evaluations, results)
++    if selected is not None:
++        probability = results[selected.design].p_target
++        assert probability is not None
++        assert probability >= params.target_probability

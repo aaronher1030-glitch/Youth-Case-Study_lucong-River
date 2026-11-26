@@ -1,0 +1,782 @@
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+999 
+ISSN: 3116-3475 
+Assessing Environmental Behaviour Among Residents in 
+Chosen Barangays of Concepcion, Tarlac: Towards an 
+Integrated Ecological Management Plan 
+ 
+Janeen Gonzales Alfonso 
+Philippine College of Criminology Graduate School  
+janeenalfonso@gmail.com 
+ 
+ABSTRACT 
+The study aimed to develop an integrated ecological management action plan 
+by analyzing the environmental behavior of residents in selected barangays of 
+Concepcion, Tarlac. Using a quantitative survey approach, it examined attitudes, 
+practices, and perceptions related to waste management, energy use, water 
+conservation, and other green practices. The study involved 150 respondents 
+from five purposively selected barangays in Concepcion, Tarlac—Alfonso, 
+Café, San Francisco, Sta. Rosa, and Santiago—to capture diverse community 
+contexts. Each barangay contributed 30 participants, comprising 20 residents 
+and 10 barangay officials, to represent both public and leadership perspectives 
+on environmental management. Convenience sampling was used, selecting 
+participants based on their availability and willingness to participate. Results 
+revealed a generally high level of environmental awareness, particularly in solid waste management, influenced 
+by local campaigns and environmental experiences. However, enforcement of environmental laws and program 
+implementation varied across communities due to resource limitations and leadership differences. The study 
+emphasized the need for stronger policy enforcement, continuous capacity building, and active community 
+participation to enhance sustainable environmental management. 
+Keywords: Environment, awareness, behavior, practices, ecological management plan 
+ 
+INTRODUCTION 
+Concepcion, Tarlac stands at a critical crossroads where rapid development intersects with environmental 
+sustainability. As one of the fast-growing municipalities in the Philippines, it is endowed with rich natural 
+resources and biodiversity that support both local livelihoods and ecological balance. However, the accelerating 
+pace of urbanization, population growth, and industrial expansion has placed unprecedented pressure on its 
+environment. Pollution, deforestation, and improper waste management are no longer isolated problems but 
+growing threats that compromise public health, food security, and the long-term viability of the community. These 
+challenges raise an urgent and compelling question: are the residents of Concepcion sufficiently aware of these 
+environmental issues, and are they actively practicing behaviors that support ecological protection? Understanding 
+this human dimension of environmental sustainability is essential because environmental policies and programs 
+can only succeed when the people who live within the ecosystem recognize their role in protecting it. 
+Studies in environmental management consistently emphasize that community awareness and 
+participation are among the strongest predictors of successful environmental protection. While local governments 
+may enact ordinances and implement conservation programs, these initiatives often fail to achieve their intended 
+impact without the active involvement of the community. In Concepcion, despite the existence of environmental 
+Date Submitted: 
+August 05, 2026 
+ 
+Date Accepted: 
+September 23, 2026 
+ 
+Date Published: 
+October 12, 2026 
+ 
+DOI: 
+10.5281/zenodo.23318653 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1000 
+ISSN: 3116-3475 
+policies and local initiatives, environmental problems continue to persist, indicating a possible gap between policy 
+implementation and public environmental behavior. Furthermore, although environmental issues in rapidly 
+developing municipalities are widely discussed, there remains a lack of localized and systematic research that 
+examines residents’ environmental awareness and eco-friendly practices. This gap in empirical evidence limits the 
+ability of decision-makers and environmental planners to design effective, responsive, and community-based 
+environmental programs. 
+This study is therefore conducted to address this critical gap by assessing the level of environmental 
+awareness and the extent of eco-friendly practices among residents of Concepcion, Tarlac. The findings of this 
+research will contribute to existing knowledge by providing data-driven insights into the relationship between 
+community awareness, behavior, and environmental sustainability in a developing local context. Moreover, the 
+results will serve as a basis for strengthening local environmental policies, enhancing community participation, 
+and formulating an integrated ecological management action plan. Ultimately, this study seeks to support the long-
+term environmental protection and sustainable development of Concepcion, while also offering a model that may 
+be applied to other municipalities facing similar environmental challenges. 
+ 
+Literature Review 
+Over the past two decades, environmental concerns have intensified alongside economic growth, 
+particularly in developing countries where increased energy use, consumption, and industrial activity have led to 
+worsening environmental conditions. Despite having environmental laws aligned with international standards, 
+many developing nations continue to experience pollution, energy waste, and poor solid waste management, which 
+negatively affect both local communities and global ecosystems. Improper waste disposal—especially plastics, 
+chemicals, and other non-biodegradable materials—contributes to climate change, ocean pollution, and ecosystem 
+degradation. Studies show that waste segregation is often hindered by high costs, lack of facilities, and limited 
+public awareness (Kihila, 2021). 
+The Philippines is among the most climate-vulnerable countries, facing risks such as extreme heat, 
+droughts, floods, and water contamination. While residents generally value environmental protection, awareness 
+alone has proven insufficient to drive sustained pro-environmental behavior. Research highlights the need for 
+stronger government commitment, empowered local communities, and continuous, experience-based 
+environmental education to promote long-term ecological responsibility (Corpus et al., 2023; Bollettino et al., 
+2020). Economic growth, while essential for development, often conflicts with environmental sustainability due 
+to increased resource use and emissions, contributing to global warming (Kandel, 2020; Ginez & Tabag, 2023). 
+Local information and education campaigns have shown only moderate success in improving climate awareness 
+(Vargas et al., 2016). Effective environmental governance depends on meaningful community engagement, cross-
+sector collaboration, and well-trained enforcement personnel. However, limited manpower, insufficient training, 
+and weak implementation of environmental laws remain persistent challenges (Barreda, 2022). Environmental 
+education—both formal and informal—is critical for transforming awareness into informed action, yet some 
+communities lack sustained IEC programs and rely only on basic reminders for waste management (Almazan & 
+Vargas, 2016). Combining traditional and digital engagement strategies has been shown to improve public 
+participation (Ramos, 2025). 
+The United Nations Sustainable Development Goals provide a framework for addressing environmental 
+behavior, particularly goals related to responsible consumption, climate action, and clean water and sanitation. 
+Household waste management, resource conservation, and participation in environmental activities directly 
+contribute to these goals and are especially relevant at the community level (United Nations, 2015). National and 
+local studies reveal ongoing issues in solid waste management, air pollution, land degradation, and water 
+contamination. Poor waste segregation, increasing waste generation, air pollution–related health risks, soil 
+erosion, deforestation, flooding, and inadequate wastewater treatment continue to threaten environmental and 
+public health. These findings underscore the urgent need for strengthened environmental education, improved 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1001 
+ISSN: 3116-3475 
+infrastructure, consistent law enforcement, and sustained community-based programs to support environmental 
+protection and sustainable development. 
+Theoretical and Conceptual Framework 
+Applying the Values-Belief Norm Theory to environmental awareness and practices requires taking into 
+account people's fundamental values, understanding their environmental views, and identifying the social norms 
+that influence their behavior. For example, if someone has strong biosphere beliefs and respects nature for what it 
+is, they'll be more likely to engage in behaviors such as restricting energy use or participating in neighborhood 
+environmental activities. 
+According to the VBN theory, a person's values are deeply imprinted and established from a young age. 
+Egoistic (self-interested), altruistic, and reciprocal are the three types of value orientation. (Concerning the welfare 
+of others) and biospheric (concerning aspects of the environment that are not related to humans). 
+Environmental aspects (de Groot & Steg, 2001) that influence ecological perspectives. 
+ 
+Ecological convictions then result in an understanding of the effects of human behavior. A system's 
+ecological impact. Consequently, when individuals are conscious of the possible drawbacks the effects of 
+environmental factors they value and possible reduction measures. They have a sense of blame for the 
+unfavorable effects. Contributes to the development of a feeling of moral obligation to protect the environment. 
+It eventually has an impact on behavior (deStern, 2000; Groot & Steg, 2007). 
+Statement of the Problem  
+ 
+This study aimed to identify the level of awareness and the practices of residents of Selected Barangay in 
+Concepcion, Tarlac. It seeks to answer the following questions:  
+1. What is the level of awareness to environmental concepts and the state of environment in terms of? 
+1.1 Climate Change 
+2.1 Global Warming 
+3.1 Deforestation 
+4.1 Sustainable Resource Management 
+2. Is there a significant difference on the awareness to environmental concepts and the state of environment 
+when the respondents are grouped according to barangay? 
+3.  What is the level of awareness to environmental issues and problems? 
+1.1 Air pollution 
+2.1 Water pollution 
+3.1 Land pollution 
+4.1 Noise Pollution 
+4. Is there a significant difference on the level of awareness to environmental issues and problems as to 
+barangay? 
+5. What is the level of Environmental practices of the residents in selected Barangay to solve environmental 
+problems? 
+1.1 Waste Segregation 
+2.1 Waste Minimization 
+3.1 Waste Disposal 
+4.1 Promotion of Green Initiatives 
+6. Is there a significant difference on the level of environmental practices to solve environmental problems 
+as to barangay? 
+7. What is the level of implementation of the environmental laws by the local authorities in selected 
+barangays in Concepcion, Tarlac? 
+1.1 Training 
+2.1 Knowledge  
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1002 
+ISSN: 3116-3475 
+3.1 Coordination 
+8. Is there a significant difference on the level of implementation of the environmental laws by the local 
+authorities as to barangay? 
+9. Based from the findings of the study, what ecological management plan may be proposed? 
+ 
+An integrated Ecological Management Plan will be created based on the study's findings.  
+ 
+METHODS 
+Research Design 
+The researcher used a Descriptive comparative research design. According to Siedlecki (2020). It is a type 
+of quantitative research method in which two or more groups are described and compared using specific variables 
+without changing any of them. It seeks to identify similarities and differences between pre-existing groups to 
+better understand the characteristics or behaviors under consideration. A quantitative research strategy would 
+involve collecting and evaluating numerical data methodically. According to Bhandari (2020) quantitative 
+research is the procedure of gathering and performing a numerical analysis. It may be used to identify trends and 
+averages, formulate hypotheses, examine cause and effect, and apply findings to larger groups.  
+Research Locale and Sampling Procedures 
+ 
+The study involved 150 respondents from five selected barangays in Concepcion, Tarlac: Barangay 
+Alfonso, Café, San Francisco, Sta. Rosa, and Santiago. These barangays were purposively chosen to represent 
+diverse community contexts and because they have existing ecological management plans. Each barangay 
+contributed 30 respondents, composed of 20 residents and 10 barangay officials, to capture both community 
+practices and leadership perspectives on environmental management. Convenience sampling was used based on 
+participant availability and willingness. Eligible respondents included residents aged 18 and above and active 
+barangay officials involved in governance, while minors, temporary residents, and non-participating individuals 
+were excluded. 
+Research Instrument 
+To collect the data for this study, the researcher used a survey questionnaire created after reading several 
+relevant studies. The first ten (10)-item statements on the questionnaire assessed respondents' knowledge of 
+environmental concepts and states, while the following ten (10)-item statements addressed ecological issues and 
+problems. The third section, which has ten (10) items, assesses their use of environmental practices to solve 
+environmental issues. The final section, which also consists of ten items, discussed the level of knowledge, 
+training, and cooperation of the local authorities with other agencies. 
+Data Gathering Procedures 
+The researcher secured permission from the barangay offices of Alfonso, Café, Sta. Rosa, Santiago, and 
+San Francisco to collect data. The questionnaire was tested for reliability with a statistician and validated by three 
+experts. Informed consent was obtained from all respondents, and coordination with barangay secretaries was 
+conducted to schedule the questionnaire administration. 
+Data Analysis 
+ 
+The study used descriptive statistics to summarize the data. Median scores were interpreted as follows: 4 
+– Very Much Aware/Always/Fully Implemented; 3 – Much Aware/Often/Implemented; 2 – Slightly 
+Aware/Sometimes/Partially Implemented; and 1 – Not Aware/Seldom/Not Implemented. 
+ 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1003 
+ISSN: 3116-3475 
+Ethical Considerations 
+Before participating, respondents were provided informed consent after being fully briefed on the study’s 
+purpose, methodology, risks, and benefits. Participation was voluntary, and respondents could withdraw at any 
+time without consequence. Their identities and responses were kept confidential, and only information relevant to 
+the study was collected.  
+ 
+RESULTS AND DISCUSSION 
+Table 1. Level of Awareness to Environmental Concepts and the State of Environment in terms of Climate 
+Change 
+Table 1 shows that residents of Concepcion, Tarlac are generally aware of climate change, with an overall 
+median score of 3. The highest awareness was on proper solid waste management (median = 4), while other 
+indicators scored 3, indicating broad understanding of climate issues. Despite this knowledge, participation in 
+environmental programs and adoption of renewable energy remain limited due to financial and institutional 
+constraints. The findings highlight the need for stronger local support, better policy enforcement, and coordinated 
+community initiatives to translate awareness into sustained environmental action, in line with the Climate Change 
+Act of 2009 (RA 9729). 
+Table 2. Level of Awareness to Environmental Concepts and the State of Environment in terms of Global 
+Warming 
+Table 2 shows that residents of Concepcion, Tarlac are generally aware of global warming and barangay-
+led initiatives such as tree planting, recycling, and clean-up drives, with an overall score of 3 (Much Aware). While 
+residents recognize these efforts, weak enforcement and limited sustainability hinder their effectiveness. The 
+findings indicate support for barangay programs, but inconsistent implementation and lack of long-term planning 
+limit impact. Strengthening education, monitoring, and program continuity is needed to translate awareness into 
+sustained environmental action. 
+Table 3. Level of Awareness to Environmental Concepts and the State of Environment in terms of 
+Deforestation  
+ 
+ 
+ 
+ 
+Table 3 shows that residents of Concepcion, Tarlac are generally aware of deforestation and related 
+environmental issues, with an overall score of 3. While they recognize the importance of tree planting, greening 
+projects, and eco-friendly practices, industrial and development priorities often overshadow environmental 
+protection. Awareness of deforestation’s impacts, such as flooding and rising temperatures, does not always lead 
+to consistent action. The findings highlight the need for stronger institutional support and integration of 
+environmental programs into local planning to ensure long-term ecological sustainability. 
+Table 4. Level of Awareness to Environmental Concepts and the State of Environment in terms of 
+Sustainable Resource Management 
+Residents of the barangay demonstrate awareness of sustainable resource management, recognizing key 
+practices such as waste segregation and recycling under Republic Act 9003. They also monitor electricity and fuel 
+use, reflecting household-level energy conservation. The barangay actively promotes environmental sustainability 
+through programs and awareness campaigns, supporting green growth and a green economy. Continued efforts to 
+reduce toxic emissions and reliance on nonrenewable resources remain essential for long-term environmental 
+protection (Ginez & Tabag, 2023). 
+ 
+ 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1004 
+ISSN: 3116-3475 
+Table 5. Presents the Significant Difference on the Level of Awareness to Environmental Concepts and the 
+State of Environment as to Barangay in terms of Climate Change. 
+Statistical analysis shows no significant difference in climate change awareness among the five barangays 
+in Concepcion, Tarlac, likely due to uniform campaigns by the Municipal Environment and Natural Resources 
+Office (MENRO). Unlike Vargas et al. (2016), which found limited impact of barangay-level initiatives, these 
+results suggest that consistent, municipality-wide efforts are more effective. Coordinated environmental education 
+enhances residents’ understanding and supports effective climate policy and community preparedness (Bollettino 
+et al., 2020). 
+Table 6. Presents the Significant Difference on the Level of Awareness to Environmental Concepts and the 
+State of Environment as to Barangay in terms of Global Warming. 
+ 
+The analysis regarding global warming awareness among the 5 barangays in Concepcion, Tarlac 
+concludes that there is no significant difference in awareness levels across these barangays. In summary, it appears 
+that all of the barangays that participated in the study had a similar degree of awareness and comprehension of 
+global warming and associated environmental concepts. This consistency could be explained by comparable 
+exposure levels to environmental information, shared access to public awareness campaigns, or localized 
+experiences with climate-related issues. 
+Table 7. Presents the Significant Difference on the Level of Awareness to Environmental Concepts and the 
+State of Environment as to Barangay in terms of Deforestation. 
+There is no statistically significant difference in deforestation awareness among residents of various 
+barangays in Concepcion, Tarlac. This suggests that respondents, regardless of barangay, have comparable levels 
+of awareness about deforestation. According to Bodo & Seomoni (2021), environmental education is the key to 
+reverse continuous and purposeful human activity via the conservation of every natural forest and afforestation, 
+where necessary. Awareness alone is often insufficient to address potential consequences; it is a deeper 
+understanding of environmental events that plays a crucial role in effectively overcoming related challenges. 
+Table 8. Presents the Significant Difference on the Level of Awareness to Environmental Concepts and the 
+State of Environment as to Barangay in terms of Sustainable Resource Management. 
+There is no statistically significant difference in climate change awareness among residents of the five 
+barangays in Concepcion, Tarlac. The municipality, through MENRO, supports sustainability efforts such as 
+solid waste management by providing IEC materials, while barangays monitor and implement recycling as 
+reflected in their Environmental Compliance Audits. In contrast, Almazan and Vargas (2016) noted that some 
+barangays, like Bayog in Los Baños, Laguna, have minimal IEC activities, limited to public announcements 
+encouraging waste segregation. 
+Table 9. Presents the Level of Awareness to Environmental Issues and Problems in terms of Air pollution 
+Table 9 indicates that residents have a moderate level of awareness of air pollution and its control 
+measures. Barangay officials are recognized for implementing Republic Act No. 8749 and imposing sanctions on 
+violators, as well as addressing common pollution sources such as cigarette smoke and vehicle emissions. Despite 
+these efforts, awareness and enforcement remain inconsistent, suggesting limited understanding of the Clean Air 
+Act among some residents. Overall, air quality management at the barangay level is developing but requires 
+stronger education, monitoring, and enforcement to improve effectiveness, consistent with findings by Sanlad 
+(2020). 
+ 
+ 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1005 
+ISSN: 3116-3475 
+Table 10. Presents the Level of Awareness to Environmental Issues and Problems in terms of Water 
+pollution 
+Barangay residents are aware of water pollution caused by population growth, urbanization, and 
+industrialization. They recognize the importance of proper waste disposal and actively manage their solid waste. 
+Barangay officials support these efforts through clean-up drives and enforcement of regulations. This aligns with 
+Mitiku (2020), who noted that water contamination occurs when human, industrial, or agricultural wastes enter 
+water bodies, making it unfit for consumption. Locally, Concepcion, Tarlac enforces Municipal Ordinance No. 
+014-19, which implements the Clean Water Act of 2004. 
+Table 11. Presents the Level of Awareness to Environmental Issues and Problems in terms of Land 
+pollution 
+Barangay residents demonstrate a moderate awareness of land pollution and the importance of keeping 
+their surroundings clean, often disposing of solid waste properly. Barangay officials play a key role in promoting 
+cleanliness, managing solid and animal waste, and maintaining central dumpsites for recycling and waste disposal. 
+Their active enforcement of solid waste procedures reflects the support of local infrastructure. This contrasts with 
+the claim of Sampulna (DENR) that poor waste segregation remains a major issue in the Philippines. Locally, 
+Concepcion, Tarlac enforces Municipal Ordinance No. 03-06, which focuses on solid waste management. 
+Table 12. Presents the Level of Awareness to Environmental Issues and Problems in terms of Noise 
+pollution 
+Residents across the five barangays of Concepcion, Tarlac demonstrate a high awareness of noise 
+pollution, reflected in a median rating of Much Aware. Barangay officials are praised for quickly addressing 
+sources of noise, including loud parties and videoke sessions, and for responding to complaints from community 
+members. Noise monitoring during sensitive periods, such as afternoons and evenings, helps maintain peace and 
+order. These findings align with Hemmat, Hesam, and Atifnigar (2023), who emphasized that regulating noise-
+sensitive hours and promoting consideration among neighbors can effectively reduce disturbances. 
+Table 13. Presents Significant Difference on the Level of Awareness Environmental Issues and Problems 
+as to Barangay in terms of Air pollution  
+This section shows a significant difference in awareness of air pollution among the five barangays in 
+Concepcion, Tarlac, indicating that residents’ knowledge and involvement in environmental activities vary across 
+communities. These differences may result from variations in local programs, educational campaigns, pollutant 
+exposure, or the effectiveness of barangay leadership in sharing air quality information. The findings suggest that 
+uniform awareness strategies may be ineffective, and interventions should be tailored to address the specific needs 
+and knowledge gaps of each barangay. According to Clean Air Asia (2024), barangays with larger populations 
+contribute more to air pollution and carbon emissions. 
+Table 14. Presents Significant Difference on the Level of Awareness Environmental Issues and Problems 
+as to Barangay in terms of Water pollution 
+There is a significant difference in water pollution awareness among the five barangays in Concepcion, 
+Tarlac, with residents in some areas being more aware than others. These differences may result from variations 
+in local awareness campaigns, education, socioeconomic status, and exposure to environmental programs. For 
+example, in Barangays Alfonso and Santiago, volunteers and LGU employees actively clean the Lucong River. 
+The findings suggest targeted initiatives are needed to improve understanding and participation in areas with lower 
+awareness. 
+ 
+ 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1006 
+ISSN: 3116-3475 
+Table 15. Presents Significant Difference on the Level of Awareness Environmental Issues and Problems 
+as to Barangay in terms of Land pollution 
+ 
+The analysis finds that the (5) five barangays in Concepcion, Tarlac, have significantly different levels of 
+awareness regarding land pollution. The differences in awareness levels may reflect disparities in the 
+implementation or effectiveness of local environmental programs. There were factors that contributes in Land 
+pollution such as the vast kilos and sacks that were collected per barangay according to their respective Barangay 
+Environmental Compliance Audit. As well as the No-Littering Ordinance that should be implemented within the 
+barangay, only the barangay Alfonso and San Francisco has it. Climate change and ocean pollution are global 
+consequences of inadequate solid waste management. 
+Table 16. Presents Significant Difference on the Level of Awareness Environmental Issues and Problems 
+as to Barangay in terms of Noise pollution 
+Analysis of noise pollution awareness shows variation among the five barangays in Concepcion, Tarlac, 
+with some residents more aware due to higher exposure to noise sources. Environmental noise can affect cognition 
+and brain function (Hume et al., 2012; Stansfeld & Clark, 2015). Among the barangays, only Barangay Café has 
+an ordinance addressing loud exhaust noise, which can disrupt community peace. 
+Table 17. Presents the Level of Practices of Residents in Selected Barangay to solve Environmental 
+Problems as to Waste Segregation 
+Table 18 shows that respondents in the selected barangays of Concepcion always separate biodegradable, 
+non-biodegradable, and hazardous wastes, reflecting a high level of awareness and commitment to proper waste 
+segregation. This behavior is likely influenced by public campaigns and environmental education. However, 
+segregation at the barangay level occurs only often, and some residents still mix their garbage or reuse recyclables 
+inconsistently. These gaps suggest that limited resources, inconsistent enforcement, and variable community 
+participation affect overall compliance. This aligns with Kihila (2021) in Tanzania, who noted that high costs, 
+inadequate facilities, low recyclable volumes, and lack of awareness can hinder effective waste segregation. 
+Table 18. Presents the Level of Practices of Residents in Selected Barangay to solve Environmental 
+Problems as to Waste Minimization 
+The findings indicate that residents of Concepcion, Tarlac show moderate to high engagement in waste 
+reduction, though consistency varies. Practices like using tumblers, reusable utensils, and buying only what is 
+necessary are frequent, while using eco bags, avoiding plastics, and rejecting single-use items occur less 
+consistently due to convenience, vendor options, and the absence of local ordinances. These results suggest that 
+combining individual awareness with policy support and public education can strengthen sustainable practices 
+(Transchel & Honhon, 2021). 
+Table 19. Presents the Level of Practices of Residents in Selected Barangay to solve Environmental 
+Problems as to Waste Disposal  
+ 
+ 
+Table 19 shows that residents consistently avoid waste dumping in flood-prone areas, with indicators 1, 
+3, and 5 rated always (median 4) and indicator 4 at 3.5 (always). This reflects an understanding of how improper 
+waste disposal contributes to flooding, water contamination, and health risks such as dengue and leptospirosis, 
+likely influenced by personal experiences and local environmental education campaigns. However, using public 
+trash bins is practiced only often, suggesting gaps in consistent behavior. Overall, residents demonstrate awareness 
+of environmental consequences and civic responsibility, supported by Information, Education, and 
+Communication (IEC) efforts such as brochures and seminars in each barangay. These findings align with Alvarez 
+et al. (2017), who identified insufficient funding, lack of garbage trucks, low awareness, and limited discipline as 
+key factors contributing to improper waste disposal. 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1007 
+ISSN: 3116-3475 
+Table 20. Presents the Level of Practices of Residents in Selected Barangay to solve Environmental 
+Problems as to Promotion of Green Initiatives 
+ 
+ 
+This section shows that the use of reusable water bottles has a median of 3 (often), indicating positive but 
+inconsistent adoption, often due to convenience or lack of refill stations. Wet and dry waste segregation is also 
+practiced often, limited by the absence of proper bins or collection systems at home and in the barangay. 
+Participation in tree planting and home gardening occurs often, depending on activity availability and space 
+constraints. The most consistent green habit is turning off unused lights, a simple and cost-saving behavior that 
+provides immediate benefits such as lower electricity bills. 
+Table 21. Presents Significant Difference on the level of environmental practices to solve environmental 
+problems as to Waste Segregation  
+There was no statistically significant difference in environmental practices among respondents from 
+different barangays in Concepcion, Tarlac, indicating similar levels of participation in activities such as waste 
+segregation. This consistency is likely supported by the Municipal Ordinance on Solid Waste Management, which 
+requires all barangays to comply and submit quarterly environmental compliance audits. These findings align with 
+Bose (2020), who reported a significant correlation between residents’ environmental awareness and their solid 
+waste management practices, noting that waste segregation was commonly practiced—similar to the results 
+observed in this study. 
+Table 22. Presents Significant Difference on the level of environmental practices to solve environmental 
+problems as to Waste Minimization  
+ 
+There is no statistically significant difference in waste disposal practices across barangays, indicating that 
+residents generally engage in similar environmental behaviors. The Municipal Environmental and Natural 
+Resource Office, in coordination with barangay officials, ensures compliance with the Municipal Ordinance on 
+solid waste management. Knowledge, attitudes, and routines regarding proper waste disposal are essential for 
+effective waste management and environmental sustainability (Castilla, Abucay, Aguilar, et al., 2024). To further 
+support proper disposal, it is recommended to increase the number of trash bins in the community, providing 
+residents with practical options for managing their waste. 
+Table 23. Presents Significant Difference on the level of environmental practices to solve environmental 
+problems as to Waste Disposal 
+There is no statistically significant difference in waste disposal across barangays, recommending that 
+residents from all barangays engage in similar environmental practices like waste disposal. The Municipal 
+Environmental and Natural Resource Office of Concepcion Tarlac in coordination with the Barangay Officials 
+complies with the Municipal Ordinance regarding solid waste management, particularly the waste disposal. 
+Knowledge, attitudes, and routines related to proper waste disposal are essential for promoting efficient waste 
+management and maintaining the sustainability of the environment (Castilla, Abucay, Aguilar, et.al 2024). In 
+addition to this, they also recommended this to guarantee that residents have plenty of practical choices for 
+disposing of their garbage, it is advised that the number of trash cans in the locality be increased. 
+Table 24. Presents Significant Difference on the level of environmental practices to solve environmental 
+problems as to Promotion of Green Initiatives 
+Residents across barangays practice similar approaches to addressing environmental problems through 
+the practice of green initiatives. There is no significant difference. The Municipal Environmental and Natural 
+Resources Office are giving away brochures in order for the residents to be more aware regarding the 
+environmental municipal ordinances that the Concepcion, Tarlac has, this was the reason why there was no 
+significant difference in this section. To further, strengthen the promotion of green initiatives, Ramos (2025) 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1008 
+ISSN: 3116-3475 
+concluded in her study that the promotional engaging tactics that successfully cultivated an ecosystem  
+using both conventional and digital methods to increase awareness and involvement is a must. 
+Table 25. Presents the Level of Implementation of the Environmental Laws by the Local Authorities as to 
+Trainings 
+Table 26 shows that RA 9003 (Solid Waste Management Act) received the highest median score of 3.5 
+(Fully Implemented), reflecting the visibility and effectiveness of segregation programs and barangay collection 
+systems. RA 8749 (Clean Air Act) also scored 3 (Fully Implemented), likely due to the ease of observing and 
+regulating local air pollution issues. RA 9275 (Clean Water Act) and RA 9512 (Environmental Education Act) had 
+moderate scores (3.5 and 3, respectively), indicating partial implementation. PD 1586 showed the lowest 
+awareness and implementation, suggesting gaps in training or communication about environmental regulations. 
+These findings align with Udanga (2023), who emphasized that the success and sustainability of 
+environmental initiatives depend on active community participation. Understanding residents’ perspectives is 
+crucial, as community engagement significantly influences the effectiveness of waste management and other local 
+environmental programs. 
+Table 26. Presents the Level of Implementation of the Environmental Laws by the Local Authorities as to 
+Knowledge 
+Table 26 shows that the Philippine Clean Air Act, Clean Water Act, National Environmental Awareness 
+and Education Act, and Philippine Environmental Impact Statement System each had a median score of 3 
+(Implemented). Enforcement is mainly at the national or city level, with limited barangay involvement. In contrast, 
+the Ecological Solid Waste Management Act scored 4 (Fully Implemented), reflecting active barangay programs 
+like waste collection and public reminders, consistent with findings in Palawan where local participation ensured 
+high implementation (Gonzales, Dalumpines, et al., 2021). 
+Table 27. Presents the Level of Implementation of the Environmental Laws by the Local Authorities as to 
+Coordination 
+The table on LGU coordination with other agencies shows a consistent median of 3 (Implemented) across 
+all five indicators, indicating moderate collaboration. While national agencies such as the National Ecology 
+Center, DepEd, EMB, DENR, and DOST work with LGUs on environmental projects, their impact at the barangay 
+level is limited. DepEd promotes R.A. 9512 through schools, EMB provides environmental advocacy, and DENR 
+offers compliance support, but these efforts are not widely felt or consistently maintained in the community. This 
+suggests that programs and partnerships exist but lack proactive communication and broad participation. Effective 
+environmental planning and implementation of municipal plans remain essential for sustainable development and 
+good governance (Gonzales, Dalumpines, et al., 2021). 
+Table 28. Presents Significant Difference on the Implementation of the Environmental Laws by the Local 
+Authorities as to Trainings 
+ 
+There is a significant difference as to the trainings of the barangay officials in the (5) five barangays in 
+Concepcion. The analysis reveals significant differences in environmental law training for barangay officials in 
+Concepcion, Tarlac, despite similar outcomes. Regular monitoring and evaluations are crucial for identifying gaps 
+and implementing timely interventions. This affirms the claim of Barreda (2022) he stated that limited personnel 
+enforcing environmental laws, requiring continuous skills enhancement training for effective implementation, 
+investigations, and prosecution. Challenges include lack of training of various environmental laws. According to 
+the Barangay Environmental Compliance Audit among the (5) five barangays, barangay officials in San Francisco 
+and Cafe, did not yet participate in any workshops or seminar conducted by MENRO and other government 
+offices. 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1009 
+ISSN: 3116-3475 
+Table 29. Presents Significant Difference on the Implementation of the Environmental Laws by the Local 
+Authorities as to Knowledge 
+The level of knowledge regarding the implementation of environmental laws significantly varies among 
+local authorities such diversity in the five (5) barangays in Concepcion Tarlac indicates that certain barangays may 
+be more aggressive or competent to enforce environmental rules than others.  
+This diversity might be explained by variances in leadership goals, available resources, degrees of 
+community participation, and the degree of assistance or training provided by higher government agencies. It 
+suggests that the execution of environmental legislation is not consistent across all barangays, and specific 
+interventions may be required to assist barangays that are falling behind. In a study conducted by Rosales, F.G., 
+Custudio, G.B., Duldulao, R.A., et.al (2004) indicates that the officials are aware of environmental problems. 
+However, they lack knowledge about it. Their degree of awareness may influence how people see the given the 
+risks that millions of people confront, what is the current state of the global environment?  
+Table 30. Presents Significant Difference on the Implementation of the Environmental Laws by the Local 
+Authorities as to Coordination 
+The result reveals noticeable differences in the level of coordination among barangay officials and 
+governmental agencies across the five barangays. According to Masagca, J. T., Masagca, M. T. & Chunxiang, M. 
+(2009), at the barangay level, excellence in governance will be apparent if community participation in identifying 
+the various needs of the local people, such as projects on Environmental protection. Collaboration with local 
+governance organizations is crucial for capacity building activities like trainings, workshops, courses, and degree 
+programs, as well as recognition and merit promotions. 
+ 
+CONCLUSION 
+Residents of Concepcion, Tarlac demonstrate strong environmental awareness, particularly in solid waste 
+management, influenced by personal experience and MENRO’s IEC campaigns. Daily practices like waste 
+segregation and energy conservation reflect individual responsibility, though barangay-level enforcement and 
+program consistency vary. Awareness of climate change, global warming, and deforestation is generally uniform 
+across barangays, yet knowledge alone does not ensure action. Environmental understanding of air, water, land, 
+and noise pollution differs by barangay, shaped by exposure, leadership, and local initiatives such as clean-up 
+drives and noise regulation enforcement. While household waste management is common, public compliance and 
+broader sustainable practices like tree planting are uneven, affected by infrastructure, population, and policy 
+support. Implementation of environmental laws, including RA 9003 (Solid Waste Management) and RA 8749 
+(Clean Air Act), is strongest, whereas RA 9275, RA 9512, and PD 1586 show moderate execution due to limited 
+local engagement. Training disparities among barangay officials and gaps in resources and coordination further 
+influence governance effectiveness. Overall, consistent policy enforcement, targeted education, inter-agency 
+coordination, and community involvement are essential to translate awareness into sustained environmental 
+action. 
+Recommendations 
+1. Conduct awareness campaigns on local and national environmental issues through flyers, brochures, and 
+symposiums led by barangay officials. 
+2. Allocate budgets for trainings, seminars, quarterly tree planting and clean-up drives, and distribution of eco-
+friendly materials such as reusable bags and bottles. 
+3. Distribute IEC materials detailing environmental ordinances, sanctions, fines, and penalties to inform 
+residents. 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1010 
+ISSN: 3116-3475 
+4. Foster active community participation through partnerships with schools, organizations, and the private sector; 
+implement programs like tree planting, river restoration, recycling competitions, and “Barangay Gulayan” 
+initiatives. 
+5. Promote key environmental practices, including waste segregation, minimization, proper disposal, 
+sustainability, and the reduction of single-use plastics. 
+6. Enforce environmental ordinances strictly, imposing penalties on violators to ensure compliance. 
+ 
+References 
+Almazan, C. V., & Vargas, D. S. (2016). Sustainable solid waste management                      
+system: Barangay Bayog, Los Baños, Laguna. CLSU International Journal of Science & Technology, 1(2), 15–25. 
+https://doi.org/10.22137/ijst.2016.v1n2.03 
+Alvarez, C. J. B., Bagus, D. E. E., & Burog, et al. (2017). A case study about the  
+improper waste disposal in Barangay Mojon Tampoy [Research paper]. De La Salle Lipa. 
+https://www.researchgate.net/publication/331702185_A_Case_Study_about_the_Improper_Waste_Disposal_in_B
+arangay_Mojon_Tampoy 
+Argosino, F. (2022). How to reduce waste to help solve waste pollution. Manila  
+Bulletin. https://mb.com.ph/2022/02/02/how-to-reduce-waste-to-help-solve-waste-pollution/ 
+Baltazar, D. E., & Seki, E. (2020). Perception and practice of household waste disposal: A participatory household survey in 
+ 
+Calamba City, Philippines. 
+Barreda, A. B. (2022). Assessment on the level of implementation of  
+environmental laws in the Philippines. International Journal of Innovative Science and Research Technology, 7(6), 
+1–9. https://ijisrt.com/assets/upload/files/IJISRT22JUN841.pdf 
+Benosa, J. L. (2021). From waste to value: How to tackle food waste. SunStar  
+Baguio. https://www.sunstar.com.ph/baguio/opinion/benosa-from-waste-to-value-how-to-tackle-food-waste 
+Bodo, T., Gbidum Gimah, B., & Seomoni, K. J. (2021). Deforestation and habitat  
+loss: Human causes, consequences, and possible solutions. Journal of Geographical Research, 4(2). 
+https://doi.org/10.30564/jgr.v4i2.3059 
+Bollettino, V., Alcayna Stevens, T., Sharma, M., Dy, P., Pham, P., & Vinck, P.  
+(2020). Public perception of climate change and disaster preparedness: Evidence from the Philippines. Climate 
+Risk Management, 30, Article 100250. https://doi.org/10.1016/j.crm.2020.100250 
+Bose, M. D. T. (n.d.). Solid waste management system of Barangay Deet. Abra  
+State Institute of Sciences and Technology. http://orcid.org/0000-0002-3539-9141 
+Camarillo, M. E. C., Sangalang, G. D., Pantinople, H. L., & Batoctoy, M. O.  
+(2021). Assessment of noise pollution exposure to elementary students: A case in Argao, Cebu, Philippines. 
+International Journal of Sciences: Basic and Applied Research, 60(4), 331–344. 
+Castilla, D. G., Abucay, G. M. J., Aguilar, L. Jr., Avila, K. L. G., & Momo, R. A.  
+(2024). Waste disposal knowledge, attitude, and practices of Barangay Poblacion, Compostela, Cebu, Philippines. 
+International Journal of Science and Research Archive, 12(1), 2146–2157. 
+https://doi.org/10.30574/ijsra.2024.12.1.0987 
+Coracero, E. E., Gallego, R. B. J., & Frago, K. J. M. (2021). A long-standing  
+problem: A review on the solid waste management in the Philippines. International Journal of Scientific and 
+Environmental Issues, 2(3), 213–220. https://doi.org/10.47540/ijsei.v2i3.144 
+Corpus, R. M., Bayani, M. S., & Ado, R. (2023). Assessing the effects and  
+dangers of climate change on the environment and society of the Philippines. Adsorption of lead (II) ions onto 
+diatomite from aqueous solution: Mechanism, isotherm and kinetic studies. 
+Crown Asia. (n.d.). Green living: Sustainable practices at home for a green  
+lifestyle. https://www.crownasia.com.ph/lifestyle-blog/sustainable-practices-at-home-for-a-greenlifestyle 
+Dalumpines, R. H., Dagara, R. S., & Ria, S. (2020). Implementing environmental  
+plans and laws at rural grassroots, Palawan, Philippines: Status, factors, and moving forward. The Palawan 
+Scientist, 13(1). https://doi.org/10.21203/rs.3.rs-119597/v1 
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1011 
+ISSN: 3116-3475 
+Ginez, E. K., & Tabag, E. (2023). Journal of Economics, Finance and Accounting Studies, 5(1), 42–62. 
+ 
+https://doi.org/10.32996/jefas.2023.5.1.4Global Forest Watch. (2024). Concepcion, Tarlac, Philippines: 
+ 
+Deforestation  
+rates & statistics. https://www.globalforestwatch.org 
+Hemmat, W., Hesam, A. M., & Atifnigar, H. (2023). Exploring noise pollution:  
+Causes, effects, and mitigation strategies—A review paper. European Journal of Theoretical and Applied Sciences, 
+1(5), 995–1005. 
+Honhon, D., & Transchel, S. (Eds.). (2021). Waste minimization: Strategies for  
+the reduction and prevention of all forms of waste [Special issue]. Sustainability. MDPI. 
+https://www.mdpi.com/journal/sustainability/special_issues/waste_minimization 
+Jain, A., & Singhal, M. K. (2014). Waste minimization. 
+ 
+https://www.researchgate.net/publication/321777065_Waste_Minimization 
+Kandel, I. P. (2020). The impact of climate change on national security. 
+Khan, F., Sohail, Z., Khan, T., Fatima, B., Malik, F., Bukhari, S. F. H., Imadi, S.  
+R., & Gul, A. (2018). Deforestation: A continuous battle—A case study from Central Asia and other countries. In 
+G. Joshi, A. G. Khan, & Z. A. Shinwari (Eds.), Vegetation of Central Asia and environs (pp. 73–117). Springer. 
+https://doi.org/10.1007/978-3-319-99728-5_4 
+Kihila, J. M. (2021). Waste segregation and potential for recycling: A case study  
+in Dar es Salaam City, Tanzania. https://doi.org/10.1080/27658511.2021.1935532 
+Makhtar, S. Z., Amirah, A., Wahab, M. A., et al. (2021). Study of environmental  
+awareness, practices, and behaviours among UniMAP students. IOP Conference Series: Earth and Environmental 
+Science, 646(1), 012061. https://doi.org/10.1088/1755-1315/646/1/012061 
+Masagca, J. T., Masagca, M. T., & Chunxiang, M. (2009). Enhancing governance of the barangay: Reflections of 
+ 
+academics. Journal of Administrative and Governance, 4(2). 
+ 
+https://www.researchgate.net/publication/339285463_Enhancing_Governance_of_the_Barangay 
+Mitiku, A. A. (2020). A review on water pollution: Causes, effects, and treatment methods (pp. 94–101). 
+Perez, G. J., Cosimo, J. C., & Aragones, L. V. (2020). Reforestation and deforestation in Northern Luzon, Philippines: 
+Critical issues as observed from space. Forests, 11(10), 1071. https://doi.org/10.3390/f11101071 
+Punzalan, C. H. (2020). Evaluating the environmental awareness and practices  
+of senior high school students: Basis for environmental education program. Aquademia, 4(1), ep20012. 
+https://doi.org/10.29333/aquademia/8219 
+Ramos, J. T. (2025). Eco-impact: Evaluating the effectiveness of promotional  
+strategies among key Philippine associations. Horizon Journal of Humanities & Social Sciences Research, 7(S), 
+47–56. https://doi.org/10.37534/bp.jhssr.2025.v7.nS.id1293.p47-56 
+Rosales, F. G. (2004). Environmental awareness of local government officials in  
+Ilocos Norte. NWU Graduate and Research Journal, 6(1). Northwestern University. https://www.nwu.edu.ph/wp-
+content/uploads/2020/03/ENVIRONMENTAL-AWARENESS-OF-LOCAL-GOVERNMENT-OFFICIALS-IN-
+ILOCOS-NORTE.pdf 
+Sanlad, L. G. (2020). Air pollution awareness in the Philippines: Its practical  
+measures for prevention [Research proposal]. Department of Education, Mandaue City Division. 
+https://www.researchgate.net/publication/338826318_Air_Pollution_Awareness_in_the_PhilippinesIts_Practical_
+Measures_for_Prevention 
+Schultz, P., Bator, R., Large, L., Bruni, C., & Tabanico, J. (2013). Littering in context: Personal and  
+environmental 
+predictors of littering behavior. Environment and Behavior, 45, 35–59. 
+Siedlecki, S. L. (2020). Understanding descriptive research designs and  
+methods. Clinical Nurse Specialist, 34(1), 8–12. https://doi.org/10.1097/NUR.0000000000000493 
+Srivastava, M., Minesh, K., & Garima, G. (2021). Synthesis and analysis of factors affecting environmentalism:  
+A 
+meta-analysis approach. 
+Sustainable Development Goals. (n.d.). United Nations. https://sdgs.un.org/goals#history 
+Talavera, E. (2022). Case study: Philippines—Recognising green skills for  
+environmental and sustainable development in four selected industries. Education for Sustainable Development 
+Studies, 5, 211–234. https://link.springer.com 
+Tekin, C., & Gunes, G. (2018). Environmental awareness in university students  
+
+
+International Journal 
+of Education, Research, and Innovation Perspectives 
+Volume 2 Issue 10 (October 2026) 
+ 
+ 
+ 
+ 
+1012 
+ISSN: 3116-3475 
+and the affecting factors. International Journal of Community Medicine and Public Health, 5(2), 555–562. 
+https://doi.org/10.18203/2394-6040.IJCMPH20180214 
+Udanga, G. E. (2023). Perspectives on environment and waste management  
+initiatives in Barangay Pili, Mogpog: Basis for local strategic management framework. Cognizance Journal of 
+Multidisciplinary Studies, 3(7), 227–238. https://cognizancejournal.com/vol3issue7/V3I712.pdfUnited Nations. 
+(2025). Department of Economic and Social Affairs. 
+Valerio, A. (2024). Balancing urban development and environmental  
+sustainability: A case study of Zamboanga City, Philippines. International Journal of Social and Economic 
+Research, 4(6), 441–455. 
+Vargas, A. N., Rafallo, E. B., Santiago, L. E. A., & Datu, M. T. V. (n.d.).  
+Community awareness in regards to global climate change: Input to the strategic plan of Makati City. 
+Wi, A., & Chang, C. (2018). Promoting pro-environmental behavior in a  
+community in Singapore: From raising awareness to behavioral change. Environmental Education Research, 24(9), 
+1325–1343. https://doi.org/10.1080/13504622.2018.1528496 
+ 
+ 

@@ -1,0 +1,317 @@
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-2/head/river_model/load.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-2/fix-1-head/river_model/load.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-2/head/river_model/load.py	2026-11-25 07:49:19.331313800 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-2/fix-1-head/river_model/load.py	2026-11-25 08:02:12.155574100 +0800
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ from dataclasses import dataclass
++from math import isfinite
+ from typing import Sequence
+ 
+ from river_model.inputs import Params, Shed, eligible_sheds
+@@ -22,19 +23,59 @@
+     top_down_r: float | None
+ 
+ 
++def _require_finite(name: str, value: object) -> None:
++    try:
++        finite = isfinite(value)
++    except TypeError as exc:
++        raise ValueError(f"{name} must be finite") from exc
++    if not finite:
++        raise ValueError(f"{name} must be finite")
++
++
+ def compute_load(params: Params, sheds: Sequence[Shed]) -> LoadResult:
++    for name in (
++        "c0_mpn_100ml",
++        "q_m3_s",
++        "e_head_day",
++        "eta",
++        "p_enroll",
++        "p_collect",
++        "p_retain",
++        "source_share_tolerance",
++    ):
++        _require_finite(name, getattr(params, name))
++    if params.upstream_mpn_100ml is not None:
++        _require_finite("upstream_mpn_100ml", params.upstream_mpn_100ml)
++
++    if params.c0_mpn_100ml <= 0:
++        raise ValueError("c0_mpn_100ml must be positive")
++    if params.q_m3_s <= 0:
++        raise ValueError("q_m3_s must be positive")
++    if params.e_head_day < 0:
++        raise ValueError("e_head_day must be nonnegative")
++    for name in ("eta", "p_enroll", "p_collect", "p_retain", "source_share_tolerance"):
++        if not 0 <= getattr(params, name) <= 1:
++            raise ValueError(f"{name} must be between 0 and 1")
++    if params.upstream_mpn_100ml is not None and params.upstream_mpn_100ml < 0:
++        raise ValueError("upstream_mpn_100ml must be nonnegative")
++
+     active = eligible_sheds(sheds)
++    for shed in active:
++        _require_finite("eligible shed heads", shed.heads)
++        if shed.heads < 0:
++            raise ValueError("eligible shed heads must be nonnegative")
+     heads = sum(s.heads for s in active)
+     l_gen = heads * params.e_head_day
+     l0 = params.c0_mpn_100ml * params.q_m3_s * 86_400 * 10_000
+     l_target = params.eta * l_gen
+     r = l_target / l0
+ 
+-    if r > 1.0 + 1e-9:
++    if r > 1.0:
+         raise ValueError(
+             f"source share exceeds 1: r={r:.6f}; revise source or flow inputs"
+         )
+-    r = max(0.0, r)
++    if r < 0.0:
++        raise ValueError(f"source share must be nonnegative: r={r:.6f}")
+ 
+     c = params.p_enroll * params.p_collect * params.p_retain
+     reduction = r * c
+@@ -43,12 +84,13 @@
+     top_down_r = None
+     reconciliation_ok = True
+     if params.upstream_mpn_100ml is not None:
+-        top_down_r = max(
+-            0.0,
+-            (params.c0_mpn_100ml - params.upstream_mpn_100ml)
+-            / params.c0_mpn_100ml,
+-        )
+-        reconciliation_ok = abs(r - top_down_r) <= params.source_share_tolerance
++        top_down_r = (
++            params.c0_mpn_100ml - params.upstream_mpn_100ml
++        ) / params.c0_mpn_100ml
++        if top_down_r < 0:
++            reconciliation_ok = False
++        else:
++            reconciliation_ok = abs(r - top_down_r) <= params.source_share_tolerance
+ 
+     annual_mpn_prevented_12 = reduction * l0 * 365 / 1.0e12
+     return LoadResult(
+diff -ruN .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-2/head/tests/test_load.py .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-2/fix-1-head/tests/test_load.py
+--- .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-2/head/tests/test_load.py	2026-11-25 07:49:19.475897900 +0800
++++ .superpowers/sdd/2026-11-24-lucong-river-economic-model/review/task-2/fix-1-head/tests/test_load.py	2026-11-25 08:02:13.037252300 +0800
+@@ -1,9 +1,10 @@
+ from dataclasses import replace
++from math import inf, nan
+ from pathlib import Path
+ 
+ import pytest
+ 
+-from river_model.inputs import Params, Shed, eligible_sheds, load_census
++from river_model.inputs import Params, Shed, load_census
+ from river_model.load import compute_load
+ 
+ FIXTURE = Path(__file__).parent / "fixtures" / "census.csv"
+@@ -14,6 +15,7 @@
+     result = compute_load(replace(Params(), eta=1.0), sheds)
+     assert result.l0_mpn_day == pytest.approx(691_200_000_000.0)
+     assert result.l_gen_mpn_day == pytest.approx(225_000_000_000.0)
++    assert result.l_target_mpn_day == pytest.approx(225_000_000_000.0)
+ 
+ 
+ def test_zero_enrollment_returns_baseline():
+@@ -37,22 +39,197 @@
+     assert high.c_end_mpn_100ml < low.c_end_mpn_100ml
+ 
+ 
+-def test_source_share_above_one_raises_instead_of_capping():
+-    sheds = (Shed("S01", "Santiago", 1000, True, "test"),)
++@pytest.mark.parametrize(
++    ("heads", "c0_mpn_100ml", "e_head_day"),
++    [
++        pytest.param(1000, 16_000.0, 1.0e9, id="clearly-above-one"),
++        pytest.param(
++            1,
++            1_000.0,
++            43_200_000_000.0 * (1.0 + 5e-10),
++            id="within-former-tolerance-band",
++        ),
++    ],
++)
++def test_source_share_above_one_raises_instead_of_capping(
++    heads, c0_mpn_100ml, e_head_day
++):
++    sheds = (Shed("S01", "Santiago", heads, True, "test"),)
++    params = replace(
++        Params(), c0_mpn_100ml=c0_mpn_100ml, e_head_day=e_head_day
++    )
+     with pytest.raises(ValueError, match="source share exceeds 1"):
+-        compute_load(Params(), sheds)
++        compute_load(params, sheds)
+ 
+ 
+ def test_threshold_identity_for_8000():
+     sheds = (Shed("S01", "Santiago", 225, True, "test"),)
+     result = compute_load(replace(Params(), q_m3_s=0.02), sheds)
++    assert result.c_end_mpn_100ml == pytest.approx(4836.263020833334)
++    assert result.reduction_fraction >= 0.5
++    assert result.c_end_mpn_100ml <= 8000
+     assert result.c_end_mpn_100ml == pytest.approx(
+         result.c0_mpn_100ml * (1 - result.r * result.c)
+     )
+     assert result.reduction_fraction == pytest.approx(result.r * result.c)
+ 
+ 
++def test_annual_prevention_matches_independent_hand_calculation():
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    params = replace(
++        Params(),
++        c0_mpn_100ml=1_000.0,
++        q_m3_s=0.1,
++        e_head_day=1.0e9,
++        eta=1.0,
++        p_enroll=1.0,
++        p_collect=1.0,
++        p_retain=1.0,
++    )
++    result = compute_load(params, sheds)
++    # One billion MPN/day prevented for 365 days is 0.365 trillion MPN/year.
++    assert result.annual_mpn_prevented_12 == pytest.approx(0.365)
++
++
+ def test_unknown_drainage_is_excluded():
+     sheds = load_census(FIXTURE)
+     result = compute_load(Params(), sheds)
+     assert result.heads == 22
++
++
++@pytest.mark.parametrize("field", ["c0_mpn_100ml", "q_m3_s"])
++@pytest.mark.parametrize("value", [0.0, -1.0, nan, inf, -inf])
++def test_invalid_physical_inputs_are_rejected(field, value):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match=field):
++        compute_load(replace(Params(), **{field: value}), sheds)
++
++
++@pytest.mark.parametrize("value", [-1.0, nan, inf, -inf])
++def test_invalid_head_load_is_rejected(value):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match="e_head_day"):
++        compute_load(replace(Params(), e_head_day=value), sheds)
++
++
++@pytest.mark.parametrize(
++    "field",
++    ["eta", "p_enroll", "p_collect", "p_retain", "source_share_tolerance"],
++)
++@pytest.mark.parametrize("value", [-0.01, 1.01, nan, inf, -inf])
++def test_invalid_factors_probabilities_and_tolerance_are_rejected(field, value):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match=field):
++        compute_load(replace(Params(), **{field: value}), sheds)
++
++
++@pytest.mark.parametrize("value", [-1.0, nan, inf, -inf])
++def test_invalid_upstream_evidence_is_rejected(value):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match="upstream_mpn_100ml"):
++        compute_load(replace(Params(), upstream_mpn_100ml=value), sheds)
++
++
++@pytest.mark.parametrize(
++    "field",
++    [
++        "c0_mpn_100ml",
++        "q_m3_s",
++        "e_head_day",
++        "eta",
++        "p_enroll",
++        "p_collect",
++        "p_retain",
++        "source_share_tolerance",
++        "upstream_mpn_100ml",
++    ],
++)
++def test_nonnumeric_load_parameters_are_rejected(field):
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    with pytest.raises(ValueError, match=field):
++        compute_load(replace(Params(), **{field: "not-a-number"}), sheds)
++
++
++def test_negative_eligible_shed_heads_are_rejected():
++    sheds = (Shed("S01", "Santiago", -1, True, "test"),)
++    with pytest.raises(ValueError, match="eligible shed heads"):
++        compute_load(Params(), sheds)
++
++
++@pytest.mark.parametrize("heads", [nan, inf, -inf])
++def test_nonfinite_eligible_shed_heads_are_rejected(heads):
++    sheds = (Shed("S01", "Santiago", heads, True, "test"),)
++    with pytest.raises(ValueError, match="eligible shed heads"):
++        compute_load(Params(), sheds)
++
++
++def test_nonnumeric_eligible_shed_heads_are_rejected():
++    sheds = (Shed("S01", "Santiago", "not-a-number", True, "test"),)
++    with pytest.raises(ValueError, match="eligible shed heads"):
++        compute_load(Params(), sheds)
++
++
++def test_reconciliation_without_upstream_reports_no_contradiction():
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    result = compute_load(Params(), sheds)
++    assert result.top_down_r is None
++    assert result.reconciliation_ok is True
++
++
++def test_reconciliation_accepts_matching_estimate():
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    params = replace(
++        Params(),
++        c0_mpn_100ml=1_000.0,
++        q_m3_s=1.0,
++        e_head_day=216_000_000_000.0,
++        upstream_mpn_100ml=750.0,
++    )
++    result = compute_load(params, sheds)
++    assert result.r == pytest.approx(0.25)
++    assert result.top_down_r == pytest.approx(0.25)
++    assert result.reconciliation_ok is True
++
++
++def test_reconciliation_rejects_mismatching_estimate():
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    params = replace(
++        Params(),
++        c0_mpn_100ml=1_000.0,
++        q_m3_s=1.0,
++        e_head_day=216_000_000_000.0,
++        upstream_mpn_100ml=500.0,
++    )
++    result = compute_load(params, sheds)
++    assert result.top_down_r == pytest.approx(0.5)
++    assert result.reconciliation_ok is False
++
++
++def test_reconciliation_accepts_exact_tolerance_boundary():
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    params = replace(
++        Params(),
++        c0_mpn_100ml=1_000.0,
++        q_m3_s=1.0,
++        e_head_day=216_000_000_000.0,
++        upstream_mpn_100ml=500.0,
++        source_share_tolerance=0.25,
++    )
++    result = compute_load(params, sheds)
++    assert result.top_down_r == pytest.approx(0.5)
++    assert result.reconciliation_ok is True
++
++
++def test_reconciliation_preserves_negative_raw_top_down_share():
++    sheds = (Shed("S01", "Santiago", 1, True, "test"),)
++    params = replace(
++        Params(),
++        c0_mpn_100ml=1_000.0,
++        q_m3_s=1.0,
++        e_head_day=216_000_000_000.0,
++        upstream_mpn_100ml=1_200.0,
++        source_share_tolerance=1.0,
++    )
++    result = compute_load(params, sheds)
++    assert result.top_down_r == pytest.approx(-0.2)
++    assert result.reconciliation_ok is False

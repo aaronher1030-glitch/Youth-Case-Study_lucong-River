@@ -1,0 +1,21 @@
+parameter,setting,value,completion_rate,arm_diff,days_used,crew_utilisation,cost_per_hh_actual
+base_accept,baseline uptake 0.45,0.45,0.465,0.264,117.0,0.086,5816.0
+base_accept,baseline uptake 0.55,0.55,0.552,0.287,117.0,0.103,5070.0
+base_accept,baseline uptake 0.65,0.65,0.64,0.313,117.0,0.12,4521.0
+f3_refusal_arm1,floor-work refusal 0.00,0.0,0.596,0.197,117.0,0.117,4773.0
+f3_refusal_arm1,floor-work refusal 0.25,0.25,0.552,0.287,117.0,0.103,5070.0
+f3_refusal_arm1,floor-work refusal 0.50,0.5,0.508,0.374,117.0,0.089,5410.0
+no_show,no-show 0.00,0.0,0.554,0.283,117.0,0.1,5054.0
+no_show,no-show 0.12,0.12,0.552,0.287,117.0,0.103,5070.0
+no_show,no-show 0.25,0.25,0.549,0.29,117.0,0.107,5079.0
+n_crews,1 crew(s),1.0,0.552,0.287,117.0,0.206,3066.0
+n_crews,2 crew(s),2.0,0.552,0.287,117.0,0.103,5070.0
+n_crews,3 crew(s),3.0,0.552,0.287,117.0,0.069,7074.0
+p_under_house,under house 60%,0.6,0.558,0.274,117.0,0.1,5025.0
+p_under_house,under house 70%,0.7,0.552,0.287,117.0,0.103,5070.0
+p_under_house,under house 80%,0.8,0.546,0.299,117.0,0.106,5115.0
+window_days,block window 5 days,5.0,0.442,0.348,49.705,0.188,3192.0
+window_days,block window 12 days,12.0,0.552,0.287,117.0,0.103,5070.0
+tank_m3,tank 0.5-1.5 m3,1.0,0.552,0.287,117.0,0.103,5070.0
+tank_m3,tank 0.5-2.5 m3,1.5,0.552,0.287,117.0,0.107,5595.0
+tank_m3,tank 0.5-3.5 m3,2.0,0.552,0.287,117.0,0.111,6120.0

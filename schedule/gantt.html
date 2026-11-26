@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Research Fair 2027 — Gantt Schedule</title>
+<style>
+  :root{
+    --aaron:#2563eb; --ellaine:#16a34a; --jolex:#d97706; --all:#7c3aed;
+    --ink:#111827; --mute:#6b7280; --line:#e5e7eb; --soft:#f9fafb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:22px;font:13px/1.4 ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:#eef1f5}
+  .wrap{max-width:1560px;margin:0 auto;background:#fff;padding:26px;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.13)}
+  h1{margin:0 0 4px;font-size:19px;letter-spacing:-.01em}
+  .sub{color:var(--mute);font-size:12px;margin-bottom:16px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 16px;font-size:12px}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:2px;display:inline-block}
+  .flag{background:#fef2f2;border-left:3px solid #b91c1c;padding:10px 12px;margin:0 0 16px;font-size:12px;border-radius:0 4px 4px 0}
+  .flag b{color:#b91c1c}
+
+  .row{display:grid;grid-template-columns:280px repeat(22,minmax(0,1fr));align-items:stretch}
+  .head{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9}
+  .hd{padding:5px 2px;font-size:10px;text-align:center;color:var(--mute);border-left:1px solid var(--line);line-height:1.2}
+  .hd b{display:block;font-size:11px;color:var(--ink)}
+  .hd.weekend{background:#e9eef5}
+  .hd.tue{background:#fff3e0;color:#b45309;font-weight:700}
+  .hd.final{background:#fde8e8;color:#b91c1c;font-weight:700}
+  .hd.taskhd{text-align:left;padding-left:4px;color:var(--ink);font-weight:700;font-size:11px;border-left:none}
+
+  .phase{grid-column:1/-1;background:#111827;color:#fff;font-size:10.5px;font-weight:700;
+         letter-spacing:.07em;text-transform:uppercase;padding:5px 10px}
+  .name{font-size:11.5px;padding:5px 8px 5px 2px;border-bottom:1px solid var(--line);
+        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;grid-column:1;grid-row:1;
+        display:flex;gap:5px;align-items:center}
+  .id{font:9.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute);min-width:24px}
+  .cell{height:26px;border-bottom:1px solid var(--line);border-left:1px solid var(--line);grid-row:1}
+  .cell.weekend{background:#f7f9fb}
+  .bar{grid-row:1;align-self:center;height:14px;border-radius:3px;z-index:3;opacity:.9}
+  .bar.ms{height:12px;border-radius:50%;opacity:1}
+  .bar.due{box-shadow:0 0 0 2px #fff,0 0 0 3px #b91c1c}
+  .foot{margin-top:18px;padding-top:12px;border-top:1px solid var(--line);font-size:11px;color:var(--mute)}
+  @media print{
+    body{background:#fff;padding:0}
+    .wrap{box-shadow:none;padding:0;max-width:none;border-radius:0}
+    .head{position:static}
+    @page{size:A3 landscape;margin:8mm}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Research Fair 2027 — Case Study Competition, Phase I</h1>
+  <div class="sub">Aaron Y. Hernandez &nbsp;·&nbsp; Ellaine T. Jacob &nbsp;·&nbsp; Jolex Alexier S. Cruz &nbsp;|&nbsp; 14 Nov – 5 Dec 2026 &nbsp;|&nbsp; 22 days &nbsp;|&nbsp; 42 tasks</div>
+
+  <div class="flag">
+    <b>Verify two things before spending money.</b>
+    1. The RF2027 site lists <b>5 December 2026 as the registration and payment deadline</b>, with the paper due after a workshop. The competition kit describes Phase I deliverables as due 5 December. Treat 5 December as hard either way — being early costs nothing.
+    &nbsp;2. The Case Study Competition has historically been open to <b>Grade 7–12</b> students only. Confirm in writing before paying the ₱1,500 fee (T01, T13).
+  </div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--aaron)"></i>Aaron — evidence &amp; writing</span>
+    <span><i class="dot" style="background:var(--ellaine)"></i>Ellaine — operations &amp; budget</span>
+    <span><i class="dot" style="background:var(--jolex)"></i>Jolex — production &amp; compliance</span>
+    <span><i class="dot" style="background:var(--all)"></i>All three</span>
+    <span><i class="dot" style="background:#b91c1c"></i>Immovable date</span>
+  </div>
+
+  <div id="chart"></div>
+
+  <div class="foot">
+    Critical path: <b>T04</b> organizer ruling → <b>T14</b> site verification → <b>T20–T26</b> drafting → <b>T34</b> adviser sign-off → <b>T39</b> freeze → <b>T40</b> submission.
+    Red rings mark 17 Nov (all paperwork) and 5 Dec (deadline). Print to A3 landscape for a wall copy.
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  ["14","Nov","Sa",1],["15","Nov","Su",1],["16","Nov","Mo",0],["17","Nov","Tu",0],
+  ["18","Nov","We",0],["19","Nov","Th",0],["20","Nov","Fr",0],["21","Nov","Sa",1],
+  ["22","Nov","Su",1],["23","Nov","Mo",0],["24","Nov","Tu",0],["25","Nov","We",0],
+  ["26","Nov","Th",0],["27","Nov","Fr",0],["28","Nov","Sa",1],["29","Nov","Su",1],
+  ["30","Nov","Mo",0],["1","Dec","Tu",0],["2","Dec","We",0],["3","Dec","Th",0],
+  ["4","Dec","Fr",0],["5","Dec","Sa",1]
+];
+
+const PHASES = [
+  ["Phase 0 — Compliance & correspondence · all due Tuesday 17 November", [
+    ["T01","Registration form + ₱1,500 team fee","Jolex",1,4],
+    ["T02","Proof of Enrollment ×3","Jolex",1,4],
+    ["T03","Adviser's Conforme","Aaron",1,4],
+    ["T04","Organizer clarification (AI + rubric)","Aaron",1,4],
+    ["T05","Principal endorsement letter","Jolex",1,4],
+    ["T06","Parental consent + DepEd 66 Annex C","Jolex",1,4],
+    ["T07","DepEd Advisory 184 attached","Jolex",1,4],
+    ["T08","Barangay letters ×3","Ellaine",1,4],
+    ["T09","City Health Department letter","Ellaine",1,4],
+    ["T10","CENRO / Public Services letter","Ellaine",1,4],
+    ["T11","DENR-EMB NCR FOI request","Ellaine",1,4],
+    ["T12","Maynilad data request","Ellaine",1,4],
+    ["T13","Eligibility check: Grade 7–12","Aaron",1,5]
+  ]],
+  ["Phase 1 — Evidence closure", [
+    ["T14","G1 site verification + centreline","Aaron",5,8],
+    ["T15","Access-tier pilot survey (20–30 tanks)","Ellaine",5,11],
+    ["T16","Quotations: lab / hauling / unit / gate fee","Ellaine",5,11],
+    ["T17","Receiving facility capacity + fee","Ellaine",5,9],
+    ["T18","Reference verification, 24 claims","Aaron",5,8],
+    ["T19","Legal routing: permits + employment","Aaron",5,9]
+  ]],
+  ["Phase 2 — Writing · 2,200-word cap", [
+    ["T20","§1–2 Background + Diagnosis","Aaron",7,10],
+    ["T21","§3–4 Barrier + Design","Aaron",9,12],
+    ["T22","§5–7 Plan + Budget + Economics","Ellaine",9,12],
+    ["T23","§8–9 KPIs + Scaling blueprint","Jolex",10,13],
+    ["T24","§10–11 Implications + Limitations","Aaron",12,13],
+    ["T25","References, APA 7","Aaron",12,13],
+    ["T26","Word count reconciliation","Jolex",13,13]
+  ]],
+  ["Phase 3 — Poster · portrait 3:4", [
+    ["T27","Poster content outline","Jolex",8,10],
+    ["T28","Poster layout and build","Jolex",11,14],
+    ["T29","Poster–paper content sync","Jolex",14,16],
+    ["T30","Export PNG or JPG","Jolex",17,17]
+  ]],
+  ["Phase 4 — Review", [
+    ["T31","Technical review","Aaron",14,15],
+    ["T32","Legal + budget review","Ellaine",14,15],
+    ["T33","Source + originality review","Aaron",15,16],
+    ["T34","Adviser review and sign-off","All",16,17],
+    ["T35","Revisions round","All",17,18]
+  ]],
+  ["Phase 5 — Production", [
+    ["T36","Final formatting (TNR 12 / Letter / 1in / 1.5)","Jolex",18,19],
+    ["T37","AI declaration, honestly completed","Aaron",18,20],
+    ["T38","Rendered artifact inspection","All",19,19],
+    ["T39","Content freeze","All",20,20]
+  ]],
+  ["Phase 6 — Submission", [
+    ["T40","Submit to rf.ysc@upalchemes.org","Jolex",21,21],
+    ["T41","Receipt confirmation","Jolex",21,21],
+    ["T42","Contingency buffer","All",22,22]
+  ]]
+];
+
+const C = {Aaron:"var(--aaron)", Ellaine:"var(--ellaine)", Jolex:"var(--jolex)", All:"var(--all)"};
+const RING = new Set(["T01","T39","T40"]);
+
+let h = '';
+
+// header
+h += '<div class="row head"><div class="hd taskhd">Task</div>';
+DAYS.forEach((d,i)=>{
+  let cls = "hd";
+  if (i===3) cls += " tue";
+  else if (i===21) cls += " final";
+  else if (d[3]) cls += " weekend";
+  h += `<div class="${cls}">${d[2]}<b>${d[0]}</b>${d[1]}</div>`;
+});
+h += '</div>';
+
+PHASES.forEach(([title, tasks])=>{
+  h += `<div class="row"><div class="phase">${title}</div></div>`;
+  tasks.forEach(([id,name,owner,s,e])=>{
+    h += '<div class="row">';
+    h += `<div class="name" style="grid-row:1"><span class="id">${id}</span>${name}</div>`;
+
+    // background cells
+    for (let d=1; d<=22; d++){
+      const wk = DAYS[d-1][3] ? " weekend" : "";
+      h += `<div class="cell${wk}" style="grid-column:${d+1}"></div>`;
+    }
+
+    // bar
+    const isMs = (e === s);
+    const cols = isMs ? `${s+1} / ${s+2}` : `${s+1} / ${e+2}`;
+    const ring = RING.has(id) ? " due" : "";
+    const ms = isMs ? " ms" : "";
+    const style = isMs
+      ? `grid-column:${cols};justify-self:center;width:13px;background:${C[owner]}`
+      : `grid-column:${cols};margin:0 2px;background:${C[owner]}`;
+    h += `<div class="bar${ms}${ring}" style="${style}"></div>`;
+    h += '</div>';
+  });
+});
+
+document.getElementById("chart").innerHTML = h;
+</script>
+</body>
+</html>

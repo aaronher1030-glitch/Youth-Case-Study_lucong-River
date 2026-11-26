@@ -1,0 +1,17 @@
+{
+  // OpenCode project configuration — Notion access for this workspace.
+  // Docs: https://opencode.ai/v2/docs/mcp-servers
+  //
+  // This points at Notion's hosted MCP server. It authenticates with OAuth,
+  // so there is NO integration token, NO page sharing, and NO local process.
+  // After saving, run /mcps in OpenCode, pick "notion", and sign in once.
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "notion": {
+        "type": "remote",
+        "url": "https://mcp.notion.com/mcp"
+      }
+    }
+  }
+}

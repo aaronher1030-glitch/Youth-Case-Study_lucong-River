@@ -1,0 +1,43 @@
+Task ID,Task,Owner,Start,End,Status,Phase,Dependency,Deliverable,Notes
+T01,"Registration form + ₱1,500 team fee",Jolex,11/14/2026,11/17/2026,Not started,0. Compliance,—,Paid receipt,"₱500 × 3. Registration and payment both close 5 Dec"
+T02,Proof of Enrollment ×3 students,Jolex,11/14/2026,11/17/2026,Not started,0. Compliance,—,3 scanned PDFs,Registrar request; allow 1 working day
+T03,Adviser's Conforme signed,Aaron,11/14/2026,11/17/2026,Not started,0. Compliance,—,Signed form,Organizer-supplied form
+T04,Organizer clarification letter (AI use + rubric + eligibility),Aaron,11/14/2026,11/17/2026,Not started,0. Compliance,—,Sent email + reply log,GATE G0. Decides whether the paper can exist
+T05,Principal endorsement letter,Jolex,11/14/2026,11/17/2026,Not started,0. Compliance,—,Signed letter,Semi-block; noted-by adviser
+T06,Parental consent + DepEd Order 66 Annex C,Jolex,11/14/2026,11/17/2026,Not started,0. Compliance,—,Signed consents,Required before any fieldwork
+T07,DepEd Advisory 184 s. 2026 attached,Jolex,11/14/2026,11/17/2026,Not started,0. Compliance,—,PDF on file,Principals and division offices ask for this
+T08,Barangay letters ×3 (671–687 cluster),Ellaine,11/14/2026,11/17/2026,Not started,0. Compliance,—,Sent letters + log,Send 2 weeks before any visit
+T09,Manila City Health Department letter,Ellaine,11/14/2026,11/17/2026,Not started,0. Compliance,—,Sent letter,Ask for sanitary inspector to accompany
+T10,Manila CENRO / Dept of Public Services letter,Ellaine,11/14/2026,11/17/2026,Not started,0. Compliance,—,Sent letter,Septage and environmental records
+T11,DENR-EMB NCR FOI request,Ellaine,11/14/2026,11/17/2026,Not started,0. Compliance,—,Filed via foi.gov.ph,15 working days statutory
+T12,Maynilad data request letter,Ellaine,11/14/2026,11/17/2026,Not started,0. Compliance,—,Sent letter,Expect a data-sharing agreement; 3–6 weeks
+T13,Eligibility check: Grade 7–12 confirmation,Aaron,11/14/2026,11/18/2026,Not started,0. Compliance,T04,Written confirmation,CSC has historically been Grade 7–12 only
+T14,G1 site verification walk + centreline,Aaron,11/18/2026,11/21/2026,Not started,1. Evidence,T08 + T09,Map with chainage 0+000–1+000,GATE G1. Everything site-specific depends on this
+T15,Access-tier pilot survey (20–30 tanks),Ellaine,11/18/2026,11/24/2026,Not started,1. Evidence,T08,F1/F2 register extract,Do not open tanks. Exterior observation only
+T16,Quotations: lab + hauling + vacuum unit + gate fee,Ellaine,11/18/2026,11/24/2026,Not started,1. Evidence,T12,4 written quotes,Three offers where practicable
+T17,Receiving facility capacity + fee confirmation,Ellaine,11/18/2026,11/22/2026,Not started,1. Evidence,T12,Written confirmation,Name the plant and its permit
+T18,Reference verification of 24 claims,Aaron,11/18/2026,11/21/2026,Not started,1. Evidence,—,Signed verification log,Use the source verification annex
+T19,Legal routing: permits + employment framework,Aaron,11/18/2026,11/22/2026,Not started,1. Evidence,T09,Legal memo,RA 9003 / 9275 / 11058 / 10173 check
+T20,Paper §1–2 Background + Diagnosis,Aaron,11/20/2026,11/23/2026,Not started,2. Writing,T14 + T18,Draft sections,~600 words
+T21,Paper §3–4 Barrier + Design,Aaron,11/22/2026,11/25/2026,Not started,2. Writing,T20,Draft sections,~550 words. Contains the two-arm test
+T22,Paper §5–7 Plan + Budget + Economics,Ellaine,11/22/2026,11/25/2026,Not started,2. Writing,T16 + T17,Draft sections,~500 words
+T23,Paper §8–9 KPIs + Scaling blueprint,Jolex,11/23/2026,11/26/2026,Not started,2. Writing,T15,Draft sections,~350 words
+T24,Paper §10–11 Implications + Limitations,Aaron,11/25/2026,11/26/2026,Not started,2. Writing,T21,Draft sections,~250 words
+T25,References in APA 7,Aaron,11/25/2026,11/26/2026,Not started,2. Writing,T18,Reference list,Cite the 2017 Palanca-Tan not the 2015
+T26,"Word count reconciliation ≤2,200",Jolex,11/26/2026,11/26/2026,Not started,2. Writing,T24,Counted manuscript,Count all non-reference text
+T27,Poster content outline,Jolex,11/21/2026,11/23/2026,Not started,3. Poster,T20,Outline,Portrait 3:4
+T28,Poster layout and build,Jolex,11/24/2026,11/27/2026,Not started,3. Poster,T27,Draft poster,Same claims as the paper
+T29,Poster–paper content sync,Jolex,11/27/2026,11/29/2026,Not started,3. Poster,T28 + T26,Synced poster,Every number must match
+T30,Poster export PNG or JPG,Jolex,11/30/2026,11/30/2026,Not started,3. Poster,T29,Rendered file,Optional 1800×2400 px
+T31,Technical review of paper,Aaron,11/27/2026,11/28/2026,Not started,4. Review,T24,Review memo,Independent read
+T32,Legal and budget review,Ellaine,11/27/2026,11/28/2026,Not started,4. Review,T22,Review memo,Check every peso and every permit
+T33,Source and originality review,Aaron,11/28/2026,11/29/2026,Not started,4. Review,T25,Review memo,Plagiarism + provenance check
+T34,Adviser review and sign-off,All,11/29/2026,11/30/2026,Not started,4. Review,T31 + T32 + T33,Adviser comments,Book the slot early
+T35,Revisions round,All,11/30/2026,12/01/2026,Not started,4. Review,T34,Revised manuscript,"Fix, do not restyle"
+T36,Final formatting (TNR 12 / Letter / 1 in / 1.5),Jolex,12/01/2026,12/02/2026,Not started,5. Production,T35,Formatted PDF,Verify in the exported file not the editor
+T37,AI declaration finalised honestly,Aaron,12/01/2026,12/03/2026,Not started,5. Production,T04,Signed declaration,Cannot be signed before the ruling
+T38,Rendered artifact inspection,All,12/02/2026,12/02/2026,Not started,5. Production,T36 + T30,Visual check,Open the actual PDF and PNG
+T39,Content freeze,All,12/03/2026,12/03/2026,Not started,5. Production,T38,Frozen files,No edits after this date
+T40,Submit to rf.ysc@upalchemes.org,Jolex,12/04/2026,12/04/2026,Not started,6. Submission,T39,Sent email + attachments,Target before 6 PM
+T41,Receipt confirmation,Jolex,12/04/2026,12/04/2026,Not started,6. Submission,T40,Screenshot or reply,Retain the record
+T42,Contingency buffer,All,12/05/2026,12/05/2026,Not started,6. Submission,T41,Standby,Hard deadline 11:59 PM PHT
